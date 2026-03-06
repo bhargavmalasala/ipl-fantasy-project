@@ -119,3 +119,24 @@ export const getLeaderboard = async (req, res) => {
     
   }
 }
+
+// fetching seasons for dropdown
+export const getSeasons = async (req, res) => {
+  try {
+    const snapshot = await db.collection("seasons").get();
+
+    if (snapshot.empty) {
+      return res.json([]);
+    }
+
+    const seasons = snapshot.docs.map(doc => doc.id);
+
+    // Sort descending (latest first)
+    seasons.sort((a, b) => b - a);
+
+    return res.json(seasons);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
