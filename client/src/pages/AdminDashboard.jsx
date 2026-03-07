@@ -2,6 +2,7 @@ import { useState } from "react";
 import api from "../api/axios";
 import { useNavigate } from "react-router-dom";
 
+const players = ["Bhargav", "Kartheek", "Rishiraj", "Sandeep", "Abhiram"];
 
 function AdminDashboard() {
   const navigate = useNavigate();
@@ -72,10 +73,19 @@ const handleLogout = () => {
 
       {entries.map((entry, index) => (
         <div key={index}>
-          <input className="border p-3 rounded-lg w-full"
-            placeholder="Name"
-            onChange={(e) => handleChange(index, "name", e.target.value)}
-          />
+          <select
+  className="border p-2 rounded"
+  onChange={(e) => handleChange(index, "name", e.target.value)}
+>
+  <option value="">Select Player</option>
+
+  {players.map((p) => (
+    <option key={p} value={p}>
+      {p}
+    </option>
+  ))}
+
+</select>
           <input className="border p-3 rounded-lg w-full"
             placeholder="Points"
             type="number"

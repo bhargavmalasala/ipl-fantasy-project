@@ -12,6 +12,9 @@ function Navbar() {
           <Link to="/" className="hover:text-blue-600">
             Leaderboard
           </Link>
+          <Link to="/matches" className="hover:text-blue-600">
+            Matches
+          </Link>
           <Link to="/admin" className="hover:text-blue-600">
             Admin
           </Link>

@@ -140,3 +140,31 @@ export const getSeasons = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+
+
+// get Matches
+export const getMatches = async (req, res) => {
+  try {
+    const { year } = req.params;
+
+    const matchesSnapshot = await db.collection("seasons").doc(year).collection("matches").orderBy("matchNumber").get();
+
+    const matches = [];
+    
+    for (const doc of matchesSnapshot.docs) {
+      const matchData = doc.data();
+      const entriesSnapshot = await doc.ref.collection("entries").get();
+      const entries = entriesSnapshot.docs.map((e) => e.data());
+
+      matches.push({
+        id: doc.id, 
+        ...matchData, 
+        entries });
+    }
+
+    return res.json(matches);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Error fetching matches" });
+  }
+}

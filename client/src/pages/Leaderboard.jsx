@@ -6,6 +6,7 @@ function Leaderboard() {
   const [season, setSeason] = useState("");
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [cache, setCache] = useState({}); 
 
   // Fetch seasons
   useEffect(() => {
@@ -21,20 +22,47 @@ function Leaderboard() {
   useEffect(() => {
     if (!season) return;
 
+    // checking the cache first
+    if (cache[season]) {
+      setData(cache[season]);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     api.get(`/seasons/${season}/leaderboard`).then(res => {
       setData(res.data);
+
+      setCache(prev => ({ ...prev, [season]: res.data })); 
+
       setLoading(false);
     });
   }, [season]);
 
-  if (loading){
-    return (
-      <div className="flex justify-center items-center mt-32">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+  // if (loading){
+  //   return (
+  //     <div className="flex justify-center items-center mt-32">
+  //       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+  //     </div>
+  //   )
+  // }
+
+  if (loading) {
+  return (
+    <div className="max-w-5xl mx-auto mt-10 bg-white p-8 rounded-2xl shadow-lg">
+      <h2 className="text-2xl font-bold mb-4">Leaderboard</h2>
+
+      <div className="animate-pulse space-y-4 mt-6">
+        {[...Array(5)].map((_, i) => (
+          <div
+            key={i}
+            className="h-6 bg-gray-200 rounded"
+          ></div>
+        ))}
       </div>
-    )
-  }
+    </div>
+  );
+}
 
   return (
     <div className="max-w-5xl mx-auto mt-10 bg-white p-8 rounded-2xl shadow-lg">
