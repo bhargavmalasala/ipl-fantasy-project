@@ -2,6 +2,15 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api/axios";
 import { useSearchParams } from "react-router-dom";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  ResponsiveContainer
+} from "recharts";
 
 function PlayerProfile() {
 
@@ -31,6 +40,10 @@ function PlayerProfile() {
       </div>
     );
   }
+
+  const sortedHistory = [...player.history].sort((a, b) => a.match - b.match);
+  console.log(player.history);
+  
 
   return (
     <div className="max-w-5xl mx-auto mt-10 bg-white p-8 rounded-2xl shadow-lg">
@@ -85,6 +98,37 @@ function PlayerProfile() {
         </div>
 
       </div>
+
+      <div className="mt-10">
+
+  <h3 className="text-xl font-semibold mb-4">
+    Performance Graph
+  </h3>
+
+  <ResponsiveContainer width="100%" height={300}>
+    <LineChart data={sortedHistory}>
+
+      <CartesianGrid strokeDasharray="3 3" />
+
+      <XAxis dataKey="points" label={{ value: "Match", position: "insideBottom", offset: -5 }} />
+
+      <YAxis label={{ value: "Points", angle: -90, position: "insideLeft" }} />
+
+      <Tooltip />
+
+      <Line
+        type="monotone"
+        dataKey="points"
+        stroke="#2563eb"
+        strokeWidth={3}
+        dot={{ r: 5 }}
+        activeDot={{ r: 8 }}
+      />
+
+    </LineChart>
+  </ResponsiveContainer>
+
+</div>
 
       {/* Match History */}
       <table className="w-full text-sm">

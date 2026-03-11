@@ -196,8 +196,11 @@ export const getPlayerProfile = async (req, res) => {
       if (entry.rank === 1) wins += 1;
 
       bestScore = Math.max(bestScore, entry.points);
-      worstScore = Math.min(worstScore, entry.points);
-
+      
+      if (entry.points > 0){
+        worstScore = Math.min(worstScore, entry.points);
+      }
+      
       history.push({
         matchNumber: matchData.matchNumber,
         points: entry.points,
@@ -205,7 +208,7 @@ export const getPlayerProfile = async (req, res) => {
       });
 
     }
-    
+    if (worstScore === Infinity) worstScore = 0;
     const matchesPlayed = history.length;
 
     const avgPoints = matchesPlayed > 0 ? Math.round(totalPoints / matchesPlayed) : 0;
