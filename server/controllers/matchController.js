@@ -1,3 +1,4 @@
+import { match } from "assert";
 import { db } from "../config/firebase.js";
 import admin from "firebase-admin";
 
@@ -166,5 +167,61 @@ export const getMatches = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Error fetching matches" });
+  }
+}
+
+export const getPlayerProfile = async (req, res) => {
+  try {
+    const { year, name } = req.params;
+
+    const matchesRef = db.collection("seasons").doc(year).collection("matches").orderBy("matchNumber");
+    const matchesSnapshot = await matchesRef.get();
+
+    let totalPoints = 0;
+    let wins = 0;
+    let bestScore = -Infinity;
+    let worstScore = Infinity;
+
+    const history = [];
+
+    for (const matchDoc of matchesSnapshot.docs) {
+      const matchData = matchDoc.data();
+
+      const entriesSnapshot = await matchDoc.ref.collection("entries").get();
+      const entry = entriesSnapshot.docs.map((e) => e.data()).find(e => e.name === name);
+
+      if (!entry) continue;
+
+      totalPoints += entry.points;
+      if (entry.rank === 1) wins += 1;
+
+      bestScore = Math.max(bestScore, entry.points);
+      worstScore = Math.min(worstScore, entry.points);
+
+      history.push({
+        matchNumber: matchData.matchNumber,
+        points: entry.points,
+        rank: entry.rank,
+      });
+
+    }
+    
+    const matchesPlayed = history.length;
+
+    const avgPoints = matchesPlayed > 0 ? Math.round(totalPoints / matchesPlayed) : 0;
+    return res.json({
+      name,
+      wins,
+      matchesPlayed,
+      totalPoints,
+      avgPoints,
+      bestScore,
+      worstScore,
+      history,
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Error fetching player profile" });
   }
 }

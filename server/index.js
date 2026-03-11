@@ -7,7 +7,7 @@ import { db } from "./config/firebase.js";
 
 const app = express();   
 
-app.use(cors());
+app.use(cors()); 
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);

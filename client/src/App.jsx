@@ -5,6 +5,7 @@ import Leaderboard from "./pages/Leaderboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
 import MatchHistory from "./pages/MatchHistory";
+import PlayerProfile from "./pages/PlayerProfile";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <AdminDashboard />
           </ProtectedRoute>} />
         <Route path="/matches" element={<MatchHistory />} />
+        <Route path="/player/:name" element={<PlayerProfile />} />
       </Routes>
     </BrowserRouter>
   );

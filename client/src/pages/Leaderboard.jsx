@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
+import { Link } from "react-router-dom";
 
 function Leaderboard() {
   const [seasons, setSeasons] = useState([]);
@@ -92,7 +93,12 @@ function Leaderboard() {
         className="border-b hover:bg-gray-50 transition"
       >
         <td className="py-3 font-semibold">{index + 1}</td>
-        <td className="py-3">{player.name}</td>
+        <td className="py-3"><Link
+    to={`/player/${player.name}?season=${season}`}
+    className="text-blue-600 hover:underline"
+  >
+    {player.name}
+  </Link></td>
         <td className="py-3">{player.wins}</td>
         <td className="py-3">{player.totalPoints}</td>
       </tr>
