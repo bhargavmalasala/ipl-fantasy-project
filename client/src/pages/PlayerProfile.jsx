@@ -149,7 +149,7 @@ function PlayerProfile() {
               key={h.match}
               className="border-b hover:bg-gray-50"
             >
-              <td className="py-2">{h.match}</td>
+              <td className="py-2">{h.matchNumber}</td>
               <td className="py-2">{h.points}</td>
               <td className="py-2">{h.rank}</td>
             </tr>
