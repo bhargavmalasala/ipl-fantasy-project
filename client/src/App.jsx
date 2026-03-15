@@ -6,6 +6,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
 import MatchHistory from "./pages/MatchHistory";
 import PlayerProfile from "./pages/PlayerProfile";
+import ComparePlayers from "./pages/ComparePlayers";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           </ProtectedRoute>} />
         <Route path="/matches" element={<MatchHistory />} />
         <Route path="/player/:name" element={<PlayerProfile />} />
+        <Route path="/compare" element={<ComparePlayers />} />
       </Routes>
     </BrowserRouter>
   );

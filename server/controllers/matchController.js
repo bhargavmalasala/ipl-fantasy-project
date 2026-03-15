@@ -228,3 +228,85 @@ export const getPlayerProfile = async (req, res) => {
     return res.status(500).json({ message: "Error fetching player profile" });
   }
 }
+
+export const comparePlayers = async (req, res) => {
+  const { year, player1, player2 } = req.params;
+
+  const matchSnapshot = await db.collection("seasons").doc(year).collection("matches").orderBy("matchNumber").get();
+
+  const history = [];
+
+  for (const matchDoc of matchSnapshot.docs) {
+    const matchData = matchDoc.data();
+    const entriesSnapshot = await matchDoc.ref.collection("entries").get();
+    const entries = entriesSnapshot.docs.map((d) => d.data());
+
+    const p1 = entries.find(e => e.name === player1);
+    const p2 = entries.find(e => e.name === player2);
+
+    
+    history.push({
+      matchNumber: matchData.matchNumber,
+      [player1]: p1 ? p1.points : 0,
+      [player2]: p2 ? p2.points : 0,
+      [`${player1}_rank`]: p1 ? p1.rank : 0,
+      [`${player2}_rank`]: p2 ? p2.rank : 0,
+    });
+  }
+  res.json(history);
+}
+
+export const getAllMatches = async (req, res) => {
+  try {
+
+    const { year } = req.params;
+
+    const matchesSnapshot = await db
+      .collection("seasons")
+      .doc(year)
+      .collection("matches")
+      .orderBy("matchNumber")
+      .get();
+
+    const matches = [];
+
+    for (const doc of matchesSnapshot.docs) {
+
+      const matchData = doc.data();
+
+      matches.push({
+        id: doc.id,
+        ...matchData
+      });
+
+    }
+
+    res.json(matches);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error fetching matches" });
+  }
+};
+
+export const deleteMatch = async (req, res) => {
+
+  try {
+
+    const { year, matchId } = req.params;
+
+    await db
+      .collection("seasons")
+      .doc(year)
+      .collection("matches")
+      .doc(matchId)
+      .delete();
+
+    res.json({ message: "Match deleted successfully" });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Delete failed" });
+  }
+
+};

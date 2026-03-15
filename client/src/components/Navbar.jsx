@@ -18,6 +18,9 @@ function Navbar() {
           <Link to="/admin" className="hover:text-blue-600">
             Admin
           </Link>
+          <Link to="/compare" className="hover:text-blue-600">
+            1 v 1
+          </Link>
         </div>
       </div>
     </div>
