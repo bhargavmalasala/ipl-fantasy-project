@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import api from "../api/axios";
 import { useNavigate } from "react-router-dom";
 
-const players = ["Bhargav", "Kartheek", "Rishiraj", "Sandeep", "Abhiram"];
+const players = ["Bhargav", "Kartheek", "Rishiraj", "Sandeep", "Abhiram", "Ram Charan"];
 
 function AdminDashboard() {
 
@@ -13,9 +13,13 @@ function AdminDashboard() {
   const [matchNumber, setMatchNumber] = useState("");
   const [date, setDate] = useState("");
 
-  const [entries, setEntries] = useState([
-    { name: "", points: "", rank: "" }
-  ]);
+  const [entries, setEntries] = useState(
+    players.map(player => ({
+    name: player,
+    points: "",
+    rank: ""
+  }))
+  );
 
   const [matches, setMatches] = useState([]);
 
@@ -32,8 +36,9 @@ function AdminDashboard() {
     try {
 
       const res = await api.get(`/seasons/${season}/matches`);
-
+      
       setMatches(res.data);
+      setMatchNumber(res.data.length + 1);
 
     } catch (error) {
       console.error("Error fetching matches");
@@ -58,9 +63,7 @@ function AdminDashboard() {
 
   };
 
-  const addPlayer = () => {
-    setEntries([...entries, { name: "", points: "", rank: "" }]);
-  };
+
 
   const handleChange = (index, field, value) => {
 
@@ -91,17 +94,33 @@ function AdminDashboard() {
           points: Number(e.points),
           rank: Number(e.rank)
         }))
-      });
+      },
+    
+    );
 
       alert("Match added successfully!");
 
-      setEntries([{ name: "", points: "", rank: "" }]);
+      setEntries(
+  players.map(player => ({
+    name: player,
+    points: "",
+    rank: ""
+  }))
+);
       setMatchNumber("");
       setDate("");
 
     } catch (error) {
 
-      alert("Error creating match");
+      const backendMessage = error?.response?.data?.message;
+      const status = error?.response?.status;
+
+      alert(backendMessage ? `Error creating match: ${backendMessage}` : `Error creating match${status ? ` (status ${status})` : ""}`);
+      console.error("Create match failed:", {
+        status,
+        data: error?.response?.data,
+        message: error?.message,
+      });
 
     }
 
@@ -114,6 +133,12 @@ function AdminDashboard() {
     navigate("/login");
 
   };
+
+  
+  useEffect(() => {
+    fetchMatches();
+  }, []);
+
 
   return (
 
@@ -178,63 +203,45 @@ function AdminDashboard() {
             onChange={(e) => setDate(e.target.value)}
           />
 
-          <h3 className="font-semibold mb-3">
-            Players
-          </h3>
+          <h3 className="font-semibold mb-3">Players</h3>
 
-          {entries.map((entry, index) => (
+{entries.map((entry, index) => (
 
-            <div key={index} className="grid grid-cols-3 gap-3 mb-3">
+  <div key={index} className="grid grid-cols-3 gap-3 mb-3">
 
-              <select
-                className="border p-2 rounded"
-                value={entry.name}
-                onChange={(e) =>
-                  handleChange(index, "name", e.target.value)
-                }
-              >
-                <option value="">Select Player</option>
+    <input
+      className="border p-2 rounded bg-gray-100"
+      value={entry.name}
+      disabled
+    />
 
-                {players.map(p => (
-                  <option key={p} value={p}>
-                    {p}
-                  </option>
-                ))}
+    <input
+      className="border p-2 rounded"
+      placeholder="Points"
+      type="number"
+      value={entry.points}
+      onChange={(e) =>
+        handleChange(index, "points", e.target.value)
+      }
+    />
 
-              </select>
+    <input
+      className="border p-2 rounded"
+      placeholder="Rank"
+      type="number"
+      value={entry.rank}
+      onChange={(e) =>
+        handleChange(index, "rank", e.target.value)
+      }
+    />
 
-              <input
-                className="border p-2 rounded"
-                placeholder="Points"
-                type="number"
-                value={entry.points}
-                onChange={(e) =>
-                  handleChange(index, "points", e.target.value)
-                }
-              />
+  </div>
 
-              <input
-                className="border p-2 rounded"
-                placeholder="Rank"
-                type="number"
-                value={entry.rank}
-                onChange={(e) =>
-                  handleChange(index, "rank", e.target.value)
-                }
-              />
-
-            </div>
-
-          ))}
+))}
 
           <div className="flex gap-3 mt-4">
 
-            <button
-              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
-              onClick={addPlayer}
-            >
-              Add Player
-            </button>
+
 
             <button
               className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
