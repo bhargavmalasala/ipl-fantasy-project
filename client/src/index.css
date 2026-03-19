@@ -1,1 +1,210 @@
 @import "tailwindcss";
+
+@layer components {
+
+  .ipl-navbar {
+    position: relative;
+    background: linear-gradient(
+      90deg,
+      #0a1931 0%,
+      #0f2747 50%,
+      #0a1931 100%
+    );
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+  }
+
+  /* subtle top highlight */
+  .ipl-navbar::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: rgba(255,255,255,0.15);
+  }
+
+  .ipl-navbar-inner {
+    max-width: 1200px;
+    margin: auto;
+    padding: 12px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* 🔥 Logo */
+  .ipl-logo {
+    font-family: "Rajdhani", "Inter", sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: #e6edf5;
+    letter-spacing: 1px;
+  }
+
+  .ipl-logo span {
+    color: #38bdf8; /* cool blue accent */
+  }
+
+  /* Links */
+  .ipl-links {
+    display: flex;
+    align-items: center;
+  }
+
+  .ipl-link {
+    position: relative;
+    padding: 0 20px;
+    font-family: "Rajdhani", "Inter", sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #9fb3c8;
+    transition: all 0.25s ease;
+  }
+
+  /* separators */
+  .ipl-link:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 16px;
+    background: rgba(255,255,255,0.12);
+  }
+
+  /* hover */
+  .ipl-link:hover {
+    color: #ffffff;
+  }
+
+  /* clean professional highlight */
+  .ipl-link::before {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 20px;
+    width: calc(100% - 40px);
+    height: 2px;
+    background: #38bdf8;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .ipl-link:hover::before {
+    opacity: 1;
+  }
+}
+
+
+/* leaderboard */
+
+@layer components {
+
+  .leaderboard-page {
+    min-height: 100vh;
+    background: url("/stadium.png") center/cover no-repeat;
+    position: relative;
+    padding-bottom: 60px;
+  }
+
+
+  .leaderboard-hero {
+    position: relative;
+    text-align: center;
+    padding-top: 40px;
+    color: white;
+  }
+
+  .leaderboard-hero h1 {
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  .leaderboard-hero p {
+    margin-top: 10px;
+    color: #cbd5e1;
+    font-size: 16px;
+  }
+
+  /* card */
+  .leaderboard-card {
+    position: relative;
+    max-width: 1000px;
+    margin: 40px auto;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+.season-wrapper {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center; /* center it */
+}
+
+.ipl-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50; /* important so it stays above content */
+}
+
+.season-select {
+  background: rgba(255, 255, 255, 0.95);
+  color: #0a1931;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  outline: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+  /* table */
+  .leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .leaderboard-table thead {
+    background: #e53900; /* strong IPL orange-red */
+    color: white;
+  }
+
+  .leaderboard-table th {
+    padding: 14px;
+    text-align: center;
+    font-size: 18px;
+  }
+
+  .leaderboard-table tbody td {
+    padding: 14px;
+    text-align: center;
+    background: #e5e5e5;
+    border-bottom: 1px solid #cfcfcf;
+    font-weight: 500;
+  }
+
+  .leaderboard-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .rank-cell {
+    font-size: 20px;
+  }
+
+  .player-link {
+    color: #000;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .player-link:hover {
+    text-decoration: underline;
+  }
+  
+
+}

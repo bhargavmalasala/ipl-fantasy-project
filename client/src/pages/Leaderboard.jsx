@@ -7,23 +7,20 @@ function Leaderboard() {
   const [season, setSeason] = useState("");
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [cache, setCache] = useState({}); 
+  const [cache, setCache] = useState({});
 
-  // Fetch seasons
   useEffect(() => {
-    api.get("/seasons").then(res => {
+    api.get("/seasons").then((res) => {
       setSeasons(res.data);
       if (res.data.length > 0) {
-        setSeason(res.data[0]); // default to latest season
+        setSeason(res.data[0]);
       }
     });
   }, []);
 
-  // Fetch leaderboard when season changes
   useEffect(() => {
     if (!season) return;
 
-    // checking the cache first
     if (cache[season]) {
       setData(cache[season]);
       setLoading(false);
@@ -31,81 +28,86 @@ function Leaderboard() {
     }
 
     setLoading(true);
-    api.get(`/seasons/${season}/leaderboard`).then(res => {
+    api.get(`/seasons/${season}/leaderboard`).then((res) => {
       setData(res.data);
-
-      setCache(prev => ({ ...prev, [season]: res.data })); 
-
+      setCache((prev) => ({ ...prev, [season]: res.data }));
       setLoading(false);
     });
   }, [season]);
 
-  // if (loading){
-  //   return (
-  //     <div className="flex justify-center items-center mt-32">
-  //       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-  //     </div>
-  //   )
-  // }
-
   if (loading) {
-  return (
-    <div className="max-w-5xl mx-auto mt-10 bg-white p-8 rounded-2xl shadow-lg">
-      <h2 className="text-2xl font-bold mb-4">Leaderboard</h2>
-
-      <div className="animate-pulse space-y-4 mt-6">
-        {[...Array(5)].map((_, i) => (
-          <div
-            key={i}
-            className="h-6 bg-gray-200 rounded"
-          ></div>
-        ))}
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white">
+        Loading...
       </div>
-    </div>
-  );
-}
+    );
+  }
 
   return (
-    <div className="max-w-5xl mx-auto mt-10 bg-white p-8 rounded-2xl shadow-lg">
-      <h2>Leaderboard</h2>
+    <div className="leaderboard-page">
+      {/* HERO */}
+      <div className="leaderboard-hero">
+        <h1>IPL FANTASY LEADERBOARD {season}</h1>
+        <p>Updated as of {new Date().toLocaleDateString()}</p>
+      </div>
 
-      <select value={season} onChange={(e) => setSeason(e.target.value)}>
-        {seasons.map((s) => (
-          <option key={s} value={s}>
-            {s}
-          </option>
-        ))}
-      </select>
+      {/* TABLE */}
+      <div className="leaderboard-card">
+        
 
-      <table className="w-full mt-6 text-sm">
-  <thead>
-    <tr className="border-b text-gray-600">
-      <th className="text-left py-3">Rank</th>
-      <th className="text-left py-3">Name</th>
-      <th className="text-left py-3">Wins</th>
-      <th className="text-left py-3">Total Points</th>
-    </tr>
-  </thead>
-  <tbody>
-    {data.map((player, index) => (
-      <tr
-        key={player.name}
-        className="border-b hover:bg-gray-50 transition"
-      >
-        <td className="py-3 font-semibold">{index + 1}</td>
-        <td className="py-3"><Link
-    to={`/player/${player.name}?season=${season}`}
-    className="text-blue-600 hover:underline"
-  >
-    {player.name}
-  </Link></td>
-        <td className="py-3">{player.wins}</td>
-        <td className="py-3">{player.totalPoints}</td>
-      </tr>
-    ))}
-  </tbody>
-</table>
-    
+        <table className="leaderboard-table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Player Name</th>
+              <th>Wins</th>
+              <th>Total Points</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {data.map((player, index) => (
+              <tr key={player.name}>
+                <td className="rank-cell">
+                  {index === 0 && "🥇"}
+                  {index === 1 && "🥈"}
+                  {index === 2 && "🥉"}
+                  {index > 2 && index + 1}
+                </td>
+
+                <td>
+                  <Link
+                    to={`/player/${player.name}?season=${season}`}
+                    className="player-link"
+                  >
+                    {player.name}
+                  </Link>
+                </td>
+
+                <td>{player.wins}</td>
+                <td>{player.totalPoints}</td>
+              </tr>
+            ))}
+          </tbody>
+        
+        </table>
+        
+      </div>
+            <div className="season-wrapper">
+          <div></div> {/* left spacer */}
+          <select
+            value={season}
+            onChange={(e) => setSeason(e.target.value)}
+            className="season-select"
+          >
+            {seasons.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+        </div>
+
     </div>
   );
 }

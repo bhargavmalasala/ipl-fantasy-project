@@ -2,26 +2,20 @@ import { Link } from "react-router-dom";
 
 function Navbar() {
   return (
-    <div className="bg-white shadow-md">
-      <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-        <h1 className="text-xl font-bold text-blue-600">
-          IPL Fantasy Tracker
+    <div className="ipl-navbar">
+      <div className="ipl-navbar-inner">
+
+        <h1 className="ipl-logo">
+          IPL <span>Fantasy</span>
         </h1>
 
-        <div className="space-x-6">
-          <Link to="/" className="hover:text-blue-600">
-            Leaderboard
-          </Link>
-          <Link to="/matches" className="hover:text-blue-600">
-            Matches
-          </Link>
-          <Link to="/admin" className="hover:text-blue-600">
-            Admin
-          </Link>
-          <Link to="/compare" className="hover:text-blue-600">
-            1 v 1
-          </Link>
+        <div className="ipl-links">
+          <Link to="/" className="ipl-link">Leaderboard</Link>
+          <Link to="/matches" className="ipl-link">Matches</Link>
+          <Link to="/compare" className="ipl-link">1v1</Link>
+          <Link to="/admin" className="ipl-link">Admin</Link>
         </div>
+
       </div>
     </div>
   );
