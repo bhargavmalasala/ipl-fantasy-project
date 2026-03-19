@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar";
 import MatchHistory from "./pages/MatchHistory";
 import PlayerProfile from "./pages/PlayerProfile";
 import ComparePlayers from "./pages/ComparePlayers";
+import Caps from "./pages/Caps";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/matches" element={<MatchHistory />} />
         <Route path="/player/:name" element={<PlayerProfile />} />
         <Route path="/compare" element={<ComparePlayers />} />
+        <Route path="/caps" element={<Caps />} />
       </Routes>
     </BrowserRouter>
   );

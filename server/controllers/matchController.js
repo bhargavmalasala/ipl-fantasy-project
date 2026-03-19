@@ -53,25 +53,25 @@ export const createMatch = async (req, res) => {
       message: "Match created successfully",
       winner: winner.name,
     });
-
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Server error" });
   }
 };
 
-
 // fetching leaderboard
 export const getLeaderboard = async (req, res) => {
   try {
-    const {year} = req.params;
+    const { year } = req.params;
 
     const matchesRef = db.collection("seasons").doc(year).collection("matches");
 
     const matchesSnapshot = await matchesRef.get();
 
     if (matchesSnapshot.empty) {
-      return res.status(404).json({ message: "No matches found for this season" });
+      return res
+        .status(404)
+        .json({ message: "No matches found for this season" });
     }
 
     const leaderboard = {};
@@ -81,23 +81,23 @@ export const getLeaderboard = async (req, res) => {
       const winner = matchData.winnerName;
 
       //Count wins
-      if(!leaderboard[winner]){
+      if (!leaderboard[winner]) {
         leaderboard[winner] = { wins: 0, totalPoints: 0 };
       }
       leaderboard[winner].wins += 1;
 
       const entriesSnapshot = await matchDoc.ref.collection("entries").get();
       entriesSnapshot.forEach((entryDoc) => {
-        const {name, points} = entryDoc.data();
+        const { name, points } = entryDoc.data();
 
-        if(!leaderboard[name]){
+        if (!leaderboard[name]) {
           leaderboard[name] = { wins: 0, totalPoints: 0 };
         }
         leaderboard[name].totalPoints += points;
       });
     }
 
-    //convert object to array 
+    //convert object to array
     const result = Object.entries(leaderboard).map(([name, stats]) => ({
       name,
       wins: stats.wins,
@@ -111,15 +111,11 @@ export const getLeaderboard = async (req, res) => {
     });
 
     return res.json(result);
-
-
-
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Server error" });
-    
   }
-}
+};
 
 // fetching seasons for dropdown
 export const getSeasons = async (req, res) => {
@@ -130,7 +126,7 @@ export const getSeasons = async (req, res) => {
       return res.json([]);
     }
 
-    const seasons = snapshot.docs.map(doc => doc.id);
+    const seasons = snapshot.docs.map((doc) => doc.id);
 
     // Sort descending (latest first)
     seasons.sort((a, b) => b - a);
@@ -142,25 +138,30 @@ export const getSeasons = async (req, res) => {
   }
 };
 
-
 // get Matches
 export const getMatches = async (req, res) => {
   try {
     const { year } = req.params;
 
-    const matchesSnapshot = await db.collection("seasons").doc(year).collection("matches").orderBy("matchNumber").get();
+    const matchesSnapshot = await db
+      .collection("seasons")
+      .doc(year)
+      .collection("matches")
+      .orderBy("matchNumber")
+      .get();
 
     const matches = [];
-    
+
     for (const doc of matchesSnapshot.docs) {
       const matchData = doc.data();
       const entriesSnapshot = await doc.ref.collection("entries").get();
       const entries = entriesSnapshot.docs.map((e) => e.data());
 
       matches.push({
-        id: doc.id, 
-        ...matchData, 
-        entries });
+        id: doc.id,
+        ...matchData,
+        entries,
+      });
     }
 
     return res.json(matches);
@@ -168,13 +169,17 @@ export const getMatches = async (req, res) => {
     console.error(error);
     return res.status(500).json({ message: "Error fetching matches" });
   }
-}
+};
 
 export const getPlayerProfile = async (req, res) => {
   try {
     const { year, name } = req.params;
 
-    const matchesRef = db.collection("seasons").doc(year).collection("matches").orderBy("matchNumber");
+    const matchesRef = db
+      .collection("seasons")
+      .doc(year)
+      .collection("matches")
+      .orderBy("matchNumber");
     const matchesSnapshot = await matchesRef.get();
 
     let totalPoints = 0;
@@ -188,7 +193,9 @@ export const getPlayerProfile = async (req, res) => {
       const matchData = matchDoc.data();
 
       const entriesSnapshot = await matchDoc.ref.collection("entries").get();
-      const entry = entriesSnapshot.docs.map((e) => e.data()).find(e => e.name === name);
+      const entry = entriesSnapshot.docs
+        .map((e) => e.data())
+        .find((e) => e.name === name);
 
       if (!entry) continue;
 
@@ -196,22 +203,22 @@ export const getPlayerProfile = async (req, res) => {
       if (entry.rank === 1) wins += 1;
 
       bestScore = Math.max(bestScore, entry.points);
-      
-      if (entry.points > 0){
+
+      if (entry.points > 0) {
         worstScore = Math.min(worstScore, entry.points);
       }
-      
+
       history.push({
         matchNumber: matchData.matchNumber,
         points: entry.points,
         rank: entry.rank,
       });
-
     }
     if (worstScore === Infinity) worstScore = 0;
     const matchesPlayed = history.length;
 
-    const avgPoints = matchesPlayed > 0 ? Math.round(totalPoints / matchesPlayed) : 0;
+    const avgPoints =
+      matchesPlayed > 0 ? Math.round(totalPoints / matchesPlayed) : 0;
     return res.json({
       name,
       wins,
@@ -222,17 +229,21 @@ export const getPlayerProfile = async (req, res) => {
       worstScore,
       history,
     });
-
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Error fetching player profile" });
   }
-}
+};
 
 export const comparePlayers = async (req, res) => {
   const { year, player1, player2 } = req.params;
 
-  const matchSnapshot = await db.collection("seasons").doc(year).collection("matches").orderBy("matchNumber").get();
+  const matchSnapshot = await db
+    .collection("seasons")
+    .doc(year)
+    .collection("matches")
+    .orderBy("matchNumber")
+    .get();
 
   const history = [];
 
@@ -241,10 +252,9 @@ export const comparePlayers = async (req, res) => {
     const entriesSnapshot = await matchDoc.ref.collection("entries").get();
     const entries = entriesSnapshot.docs.map((d) => d.data());
 
-    const p1 = entries.find(e => e.name === player1);
-    const p2 = entries.find(e => e.name === player2);
+    const p1 = entries.find((e) => e.name === player1);
+    const p2 = entries.find((e) => e.name === player2);
 
-    
     history.push({
       matchNumber: matchData.matchNumber,
       [player1]: p1 ? p1.points : 0,
@@ -254,11 +264,10 @@ export const comparePlayers = async (req, res) => {
     });
   }
   res.json(history);
-}
+};
 
 export const getAllMatches = async (req, res) => {
   try {
-
     const { year } = req.params;
 
     const matchesSnapshot = await db
@@ -271,18 +280,15 @@ export const getAllMatches = async (req, res) => {
     const matches = [];
 
     for (const doc of matchesSnapshot.docs) {
-
       const matchData = doc.data();
 
       matches.push({
         id: doc.id,
-        ...matchData
+        ...matchData,
       });
-
     }
 
     res.json(matches);
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error fetching matches" });
@@ -290,9 +296,7 @@ export const getAllMatches = async (req, res) => {
 };
 
 export const deleteMatch = async (req, res) => {
-
   try {
-
     const { year, matchId } = req.params;
 
     await db
@@ -303,10 +307,97 @@ export const deleteMatch = async (req, res) => {
       .delete();
 
     res.json({ message: "Match deleted successfully" });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Delete failed" });
   }
+};
 
+export const getSeasonCaps = async (req, res) => {
+  try {
+    const { year } = req.params;
+
+    const matchesSnapshot = await db
+      .collection("seasons")
+      .doc(year)
+      .collection("matches")
+      .get();
+
+    const playerStats = {};
+
+    let highestScore = { player: "", points: 0 };
+    let lowestScore = { player: "", points: Infinity };
+
+    // Entries are stored in each match's subcollection, not inside the match document.
+    for (const matchDoc of matchesSnapshot.docs) {
+      const entriesSnapshot = await matchDoc.ref.collection("entries").get();
+
+      entriesSnapshot.forEach((entryDoc) => {
+        const { name, points, rank } = entryDoc.data();
+
+        if (!name || typeof points !== "number" || typeof rank !== "number") {
+          return;
+        }
+
+        if (!playerStats[name]) {
+          playerStats[name] = {
+            totalPoints: 0,
+            matches: 0,
+            wins: 0,
+          };
+        }
+
+        playerStats[name].totalPoints += points;
+        playerStats[name].matches += 1;
+
+        if (rank === 1) {
+          playerStats[name].wins += 1;
+        }
+
+        if (points > highestScore.points) {
+          highestScore = { player: name, points };
+        }
+
+        if (points > 0 && points < lowestScore.points) {
+          lowestScore = { player: name, points };
+        }
+      });
+    }
+
+    let orangeCap = { player: "", points: 0 };
+    let blueCap = { player: "", wins: 0 };
+    let yellowCap = { player: "", avg: 0 };
+
+    Object.keys(playerStats).forEach((player) => {
+      const stats = playerStats[player];
+      const avg = stats.totalPoints / stats.matches;
+
+      if (stats.totalPoints > orangeCap.points) {
+        orangeCap = { player, points: stats.totalPoints };
+      }
+
+      if (stats.wins > blueCap.wins) {
+        blueCap = { player, wins: stats.wins };
+      }
+
+      if (avg > Number(yellowCap.avg)) {
+        yellowCap = { player, avg: avg.toFixed(2) };
+      }
+    });
+
+    if (lowestScore.points === Infinity) {
+      lowestScore = { player: "", points: 0 };
+    }
+
+    res.json({
+      orangeCap,
+      redCap: highestScore,
+      blackCap: lowestScore,
+      blueCap,
+      yellowCap,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error fetching season caps" });
+  }
 };
