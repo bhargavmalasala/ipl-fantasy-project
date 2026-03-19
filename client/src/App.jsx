@@ -11,6 +11,8 @@ import Caps from "./pages/Caps";
 
 function App() {
   return (
+    <div className="app-bg">
+
     <BrowserRouter>
       <Navbar />
       <Routes>
@@ -26,6 +28,7 @@ function App() {
         <Route path="/caps" element={<Caps />} />
       </Routes>
     </BrowserRouter>
+            </div>
   );
 }
 
