@@ -37,35 +37,41 @@ function MatchHistory() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto mt-10  p-8 rounded-2xl shadow-lg">
+    <div className="max-w-5xl mx-auto mt-10 bg-[#0f172a] p-8 rounded-2xl shadow-2xl border border-white/10 text-white">
 
       {/* Header */}
-      <div className="flex justify-between text-white items-center mb-6">
+      <div className="text-center mb-6">
 
-        <h2 className="text-2xl font-bold">
-          Match History
-        </h2>
+  <h2 className="text-3xl font-bold text-orange-400">
+    Match History
+  </h2>
 
-        {/* Season Dropdown */}
-        <select
-  value={season}
-  onChange={(e) => setSeason(e.target.value)}
-  className="bg-white/10 text-white border border-white/20 p-2 rounded-lg backdrop-blur"
->
-  {seasons.map((s) => (
-    <option key={s} value={s} className="text-black">
-      {s}
-    </option>
-  ))}
-</select>
+  <p className="text-gray-400 text-sm mt-1">
+    Season {season}
+  </p>
 
-      </div>
+</div>
+<div className="flex justify-center mt-8 mb-8">
+
+  <select
+    value={season}
+    onChange={(e) => setSeason(e.target.value)}
+    className="bg-white/10 border border-white/20 text-white px-4 py-2 rounded-lg"
+  >
+    {seasons.map((s) => (
+      <option key={s} value={s} className="text-black">
+        {s}
+      </option>
+    ))}
+  </select>
+
+</div>
 
       {/* Matches */}
       {matches.map((match) => (
         <div
           key={match.id}
-          className="border border-gray-300 rounded-xl p-5 mb-8 bg-white/5 backdrop-blur-xs"
+          className="border border-white/10 rounded-xl p-5 mb-8 bg-[#1e293b]"
         >
 
           {/* Match Header */}
@@ -100,9 +106,7 @@ function MatchHistory() {
 
         <tr
           key={entry.name}
-          className={`border-b transition ${
-            index % 2 === 0 ? "bg-gray-50" : "bg-white"
-          } hover:bg-orange-50`}
+          className="border-b border-white/10 hover:bg-orange-50/10 transition"
         >
           <td className="py-3 px-4 font-semibold">
             {entry.rank}
@@ -127,8 +131,11 @@ function MatchHistory() {
 
 </table>
 
+
+
         </div>
       ))}
+      
     </div>
   );
 }
