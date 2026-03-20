@@ -45,69 +45,98 @@ function Leaderboard() {
   }
 
   return (
-    <div className="leaderboard-page">
+    <div className="max-w-5xl mx-auto mt-10 bg-[#0f172a] p-8 rounded-2xl shadow-2xl border border-white/10 text-white">
+
       {/* HERO */}
-      <div className="leaderboard-hero">
-        <h1>IPL FANTASY LEADERBOARD {season}</h1>
-        <p>Updated as of {new Date().toLocaleDateString()}</p>
-      </div>
+     <div className="text-center mb-6">
+
+  <h1 className="text-3xl font-bold text-orange-400">
+    IPL Fantasy Leaderboard
+  </h1>
+
+  <p className="text-gray-400 text-sm mt-1">
+    Season {season} • Updated {new Date().toLocaleDateString()}
+  </p>
+
+</div>
 
       {/* TABLE */}
-      <div className="leaderboard-card">
-        
+      <table className="w-full text-sm overflow-hidden rounded-xl">
 
-        <table className="leaderboard-table">
-          <thead>
-            <tr>
-              <th>Rank</th>
-              <th>Player Name</th>
-              <th>Wins</th>
-              <th>Total Points</th>
+        {/* Header */}
+        <thead>
+          <tr className="bg-orange-500 text-white">
+            <th className="text-left py-3 px-4">Rank</th>
+            <th className="text-left py-3 px-4">Player</th>
+            <th className="text-left py-3 px-4">Wins</th>
+            <th className="text-left py-3 px-4">Points</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {data.map((player, index) => (
+
+            <tr
+              key={player.name}
+              className="border-b hover:bg-orange-50/10 transition"
+            >
+
+              {/* Rank */}
+              <td className="py-3 px-4 font-semibold">
+                {index === 0 && "🥇"}
+                {index === 1 && "🥈"}
+                {index === 2 && "🥉"}
+                {index > 2 && index + 1}
+              </td>
+
+              {/* Player */}
+              <td className={`py-3 px-4 ${
+                index === 0 ? "text-yellow-400 font-bold" : ""
+              }`}>
+                <Link
+                  to={`/player/${player.name}?season=${season}`}
+                  className="hover:underline"
+                >
+                  {player.name}
+                </Link>
+              </td>
+
+              {/* Wins */}
+              <td className={`py-3 px-4 ${
+                index === 0 ? " font-bold" : ""
+              }`}>
+                {player.wins}
+              </td>
+
+              {/* Points */}
+              <td className={`py-3 px-4 ${
+                index === 0 ? "text-orange-400 font-bold" : ""
+              }`}>
+                {player.totalPoints}
+              </td>
+
             </tr>
-          </thead>
 
-          <tbody>
-            {data.map((player, index) => (
-              <tr key={player.name}>
-                <td className="rank-cell">
-                  {index === 0 && "🥇"}
-                  {index === 1 && "🥈"}
-                  {index === 2 && "🥉"}
-                  {index > 2 && index + 1}
-                </td>
+          ))}
+        </tbody>
 
-                <td>
-                  <Link
-                    to={`/player/${player.name}?season=${season}`}
-                    className="player-link"
-                  >
-                    {player.name}
-                  </Link>
-                </td>
+      </table>
 
-                <td>{player.wins}</td>
-                <td>{player.totalPoints}</td>
-              </tr>
-            ))}
-          </tbody>
-        
-        </table>
-        
-      </div>
-            <div className="season-wrapper">
-          <div></div> {/* left spacer */}
-          <select
-            value={season}
-            onChange={(e) => setSeason(e.target.value)}
-            className="season-select"
-          >
-            {seasons.map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
-        </div>
+      <div className="flex justify-center mt-8">
+
+  <select
+    value={season}
+    onChange={(e) => setSeason(e.target.value)}
+    className="bg-white/10 border border-white/20 text-white px-4 py-2 rounded-lg"
+  >
+    {seasons.map((s) => (
+      <option key={s} value={s} className="text-black">
+        {s}
+      </option>
+    ))}
+  </select>
+
+</div>
 
     </div>
   );
