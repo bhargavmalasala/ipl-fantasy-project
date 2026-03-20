@@ -11,6 +11,7 @@ import {
   CartesianGrid,
   ResponsiveContainer
 } from "recharts";
+import Loader from "../components/Loader";
 
 function PlayerProfile() {
 
@@ -36,7 +37,8 @@ function PlayerProfile() {
   if (loading) {
     return (
       <div className="flex justify-center mt-20">
-        <div className="animate-spin h-10 w-10 border-b-2 border-blue-600 rounded-full"></div>
+        <Loader />
+
       </div>
     );
   }
@@ -46,51 +48,65 @@ function PlayerProfile() {
   
 
   return (
-    <div className="max-w-5xl mx-auto mt-10 bg-white p-8 rounded-2xl shadow-lg">
+    <div className="max-w-5xl mx-auto mt-10 bg-[#0f172a] p-8 rounded-2xl shadow-2xl border border-white/10 text-white">
 
-      <h2 className="text-2xl font-bold mb-6">
-        {player.name} - Season {season}
-      </h2>
+      <div className="flex justify-between items-center mb-8">
+
+  <div>
+    <h2 className="text-3xl font-bold text-orange-400">
+      {player.name}
+    </h2>
+    <p className="text-gray-400">
+      Season {season}
+    </p>
+  </div>
+
+  {/* Optional Badge */}
+  <div className="text-sm bg-orange-500/20 text-orange-400 px-4 py-2 rounded-lg">
+    Player Stats
+  </div>
+
+</div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
 
-        <div className="bg-gray-100 p-4 rounded">
+        <div className="bg-[#1e293b] border border-white/10 p-4 rounded">
           Matches Played
           <div className="font-bold text-lg">
             {player.matchesPlayed}
           </div>
         </div>
 
-        <div className="bg-gray-100 p-4 rounded">
+        <div className="bg-[#1e293b] border border-white/10 p-4 rounded">
           Wins
           <div className="font-bold text-lg">
             {player.wins}
           </div>
         </div>
 
-        <div className="bg-gray-100 p-4 rounded">
+        <div className="bg-[#1e293b] border border-white/10 p-4 rounded">
           Total Points
-          <div className="font-bold text-lg">
+          <div className="font-bold text-xl text-orange-400">
             {player.totalPoints}
           </div>
         </div>
 
-        <div className="bg-gray-100 p-4 rounded">
+        <div className="bg-[#1e293b] border border-white/10 p-4 rounded">
           Avg Points
           <div className="font-bold text-lg">
             {player.avgPoints}
           </div>
         </div>
 
-        <div className="bg-gray-100 p-4 rounded">
+        <div className="bg-[#1e293b] border border-white/10 p-4 rounded">
           Best Score
           <div className="font-bold text-lg">
             {player.bestScore}
           </div>
         </div>
 
-        <div className="bg-gray-100 p-4 rounded">
+        <div className="bg-[#1e293b] border border-white/10 p-4 rounded">
           Worst Score
           <div className="font-bold text-lg">
             {player.worstScore}
@@ -104,13 +120,14 @@ function PlayerProfile() {
   <h3 className="text-xl font-semibold mb-4">
     Performance Graph
   </h3>
+<div className="mt-10 bg-[#1e293b] p-6 rounded-xl border border-white/10">
 
   <ResponsiveContainer width="100%" height={300}>
     <LineChart data={sortedHistory}>
 
       <CartesianGrid strokeDasharray="3 3" />
 
-      <XAxis dataKey="points" label={{ value: "Match", position: "insideBottom", offset: -5 }} />
+      <XAxis dataKey="matchNumber" label={{ value: "Match", position: "insideBottom", offset: -5 }} />
 
       <YAxis label={{ value: "Points", angle: -90, position: "insideLeft" }} />
 
@@ -119,46 +136,59 @@ function PlayerProfile() {
       <Line
         type="monotone"
         dataKey="points"
-        stroke="#2563eb"
+        stroke="#f97316"
         strokeWidth={3}
-        dot={{ r: 5 }}
-        activeDot={{ r: 8 }}
+        dot={{ r: 4 }}
+        activeDot={{ r: 7 }}
       />
 
     </LineChart>
   </ResponsiveContainer>
+  </div>
 
 </div>
 
       {/* Match History */}
-      <table className="w-full text-sm">
+      <table className="w-full text-sm mt-10 overflow-hidden rounded-xl">
 
-        <thead>
-          <tr className="border-b text-gray-600">
-            <th className="text-left py-2">Match</th>
-            <th className="text-left py-2">Points</th>
-            <th className="text-left py-2">Rank</th>
-          </tr>
-        </thead>
+  <thead>
+    <tr className="bg-orange-500 text-white">
+      <th className="text-left py-3 px-4">Match</th>
+      <th className="text-left py-3 px-4">Points</th>
+      <th className="text-left py-3 px-4">Rank</th>
+    </tr>
+  </thead>
 
-        <tbody>
+  <tbody>
+    {player.history.map((h, index) => (
 
-          {player.history.map((h) => (
+      <tr
+        key={h.match}
+        className={`border-b ${
+          index % 2 === 0 ? "bg-[#1e293b]" : "bg-[#0f172a]"
+        } hover:bg-orange-50/10`}
+      >
 
-            <tr
-              key={h.match}
-              className="border-b hover:bg-gray-50"
-            >
-              <td className="py-2">{h.matchNumber}</td>
-              <td className="py-2">{h.points}</td>
-              <td className="py-2">{h.rank}</td>
-            </tr>
+        <td className="py-3 px-4">
+          Match {h.matchNumber}
+        </td>
 
-          ))}
+        <td className="py-3 px-4">
+          {h.points}
+        </td>
 
-        </tbody>
+        <td className={`py-3 px-4 ${
+          h.rank === 1 ? "text-yellow-400 font-bold" : ""
+        }`}>
+          {h.rank === 1 ? "🏆 1" : h.rank}
+        </td>
 
-      </table>
+      </tr>
+
+    ))}
+  </tbody>
+
+</table>
 
     </div>
   );
