@@ -142,22 +142,22 @@ function AdminDashboard() {
 
   return (
 
-    <div className="max-w-4xl mx-auto mt-10 bg-white p-8 rounded-2xl shadow-lg">
+    <div className="max-w-4xl mx-auto mt-10 bg-[#0f172a] p-8 rounded-2xl shadow-2xl border border-white/10 text-white">
 
-      <div className="flex justify-between mb-6">
+      <div className="flex justify-between items-center mb-8">
 
-        <h2 className="text-2xl font-bold">
-          Admin Panel
-        </h2>
+  <h2 className="text-3xl font-bold text-orange-400">
+    Admin Panel
+  </h2>
 
-        <button
-          onClick={handleLogout}
-          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
-        >
-          Logout
-        </button>
+  <button
+    onClick={handleLogout}
+    className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
+  >
+    Logout
+  </button>
 
-      </div>
+</div>
 
       {/* Tabs */}
 
@@ -165,18 +165,22 @@ function AdminDashboard() {
 
         <button
           onClick={() => setTab("add")}
-          className={`px-4 py-2 rounded ${
-            tab === "add" ? "bg-blue-600 text-white" : "bg-gray-200"
-          }`}
+          className={`px-4 py-2 rounded-lg transition ${
+  tab === "add"
+    ? "bg-orange-500 text-white"
+    : "bg-white/10 text-gray-300 hover:bg-white/20"
+}`}
         >
           Add Match
         </button>
 
         <button
           onClick={() => setTab("manage")}
-          className={`px-4 py-2 rounded ${
-            tab === "manage" ? "bg-blue-600 text-white" : "bg-gray-200"
-          }`}
+          className={`px-4 py-2 rounded-lg transition ${
+  tab === "manage"
+    ? "bg-orange-500 text-white"
+    : "bg-white/10 text-gray-300 hover:bg-white/20"
+}`}
         >
           Manage Matches
         </button>
@@ -190,14 +194,14 @@ function AdminDashboard() {
         <>
 
           <input
-            className="border p-3 rounded-lg w-full mb-4"
+            className="w-full mb-4 px-4 py-3 rounded-lg bg-[#1e293b] border border-white/10 text-white focus:outline-none focus:border-orange-400"
             placeholder="Match Number"
             value={matchNumber}
             onChange={(e) => setMatchNumber(e.target.value)}
           />
 
           <input
-            className="border p-3 rounded-lg w-full mb-4"
+            className="w-full mb-4 px-4 py-3 rounded-lg bg-[#1e293b] border border-white/10 text-white focus:outline-none focus:border-orange-400"
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
@@ -207,16 +211,16 @@ function AdminDashboard() {
 
 {entries.map((entry, index) => (
 
-  <div key={index} className="grid grid-cols-3 gap-3 mb-3">
+  <div key={index} className="grid grid-cols-3 gap-3 mb-3 bg-[#1e293b] p-3 rounded-lg border border-white/10">
 
     <input
-      className="border p-2 rounded bg-gray-100"
+      className="p-2 rounded bg-[#0f172a] text-gray-300 border border-white/10"
       value={entry.name}
       disabled
     />
 
     <input
-      className="border p-2 rounded"
+      className="p-2 rounded bg-[#0f172a] text-white border border-white/10 focus:outline-none focus:border-orange-400"
       placeholder="Points"
       type="number"
       value={entry.points}
@@ -244,7 +248,7 @@ function AdminDashboard() {
 
 
             <button
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+              className="bg-orange-500 text-white px-5 py-2 rounded-lg hover:bg-orange-600 transition"
               onClick={handleSubmit}
             >
               Submit Match
@@ -260,11 +264,11 @@ function AdminDashboard() {
 
       {tab === "manage" && (
 
-        <table className="w-full text-sm">
+        <table className="w-full text-sm overflow-hidden rounded-xl mt-4">
 
           <thead>
 
-            <tr className="border-b text-gray-600">
+            <tr className="bg-orange-500 text-white">
 
               <th className="text-left py-3">
                 Match
@@ -286,21 +290,21 @@ function AdminDashboard() {
 
             {matches.map(match => (
 
-              <tr key={match.id} className="border-b">
+              <tr className="border-b border-white/10 hover:bg-orange-50/10 transition">
 
-                <td className="py-3">
+                <td className="py-3 px-4 text-white">
                   Match {match.matchNumber}
                 </td>
 
-                <td className="py-3">
+                <td className="py-3 px-4 text-white">
                   {match.date}
                 </td>
 
-                <td className="py-3">
+                <td className="py-3 px-4 text-white">
 
                   <button
                     onClick={() => deleteMatch(match.id)}
-                    className="text-red-600"
+                    className="text-red-400 hover:text-red-500 transition"
                   >
                     Delete
                   </button>
