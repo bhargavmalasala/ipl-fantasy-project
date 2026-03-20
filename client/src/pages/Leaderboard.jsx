@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import { Link } from "react-router-dom";
+import Loader from "../components/Loader";
 
 function Leaderboard() {
   const [seasons, setSeasons] = useState([]);
@@ -38,7 +39,7 @@ function Leaderboard() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center text-white">
-        Loading...
+        <Loader />
       </div>
     );
   }
