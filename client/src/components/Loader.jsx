@@ -62,7 +62,7 @@ const StyledWrapper = styled.div`
     display: flex;
     align-items: center;
     box-sizing: border-box;
-    padding: 5px;
+    padding: 1px;
     width: 200px;
     height: var(--height);
     background-color: #212121 /*change this*/;
@@ -86,7 +86,7 @@ const StyledWrapper = styled.div`
       rgba(249, 199, 79, 1) 100%
     );
     border-radius: calc(var(--height) / 2);
-    animation: loading 4s ease-out infinite;
+    animation: loading 5s ease-out infinite;
   }
 
   .white-bars-container {
