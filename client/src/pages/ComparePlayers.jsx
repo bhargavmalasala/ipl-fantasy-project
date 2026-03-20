@@ -16,6 +16,7 @@ function ComparePlayers() {
   const [player1, setPlayer1] = useState("");
   const [player2, setPlayer2] = useState("");
   const [data, setData] = useState([]);
+  const [loadingCompare, setLoadingCompare] = useState(false);
 
   const season = new Date().getFullYear();
 
@@ -36,6 +37,8 @@ function ComparePlayers() {
 
     if (!player1 || !player2) return;
 
+    setLoadingCompare(true);
+
     const res = await api.get(
       `/seasons/${season}/compare/${player1}/${player2}`
     );
@@ -43,6 +46,7 @@ function ComparePlayers() {
     setData(res.data);
 
     console.log(res.data);
+    setLoadingCompare(false);
   };
 
 let p1Wins = 0;
@@ -97,10 +101,16 @@ data.forEach(match => {
 
 });
 
-const matchesPlayed = data.length;
+let p1Matches = 0;
+let p2Matches = 0;
 
-const p1Avg = matchesPlayed ? Math.round(p1Total / matchesPlayed) : 0;
-const p2Avg = matchesPlayed ? Math.round(p2Total / matchesPlayed) : 0;
+data.forEach(match => {
+  if (match[player1] > 0) p1Matches++;
+  if (match[player2] > 0) p2Matches++;
+});
+
+const p1Avg = p1Matches ? Math.round(p1Total / p1Matches) : 0;
+const p2Avg = p2Matches ? Math.round(p2Total / p2Matches) : 0;
 
 if (p1Lowest === Infinity) p1Lowest = 0;
 if (p2Lowest === Infinity) p2Lowest = 0;
@@ -109,50 +119,46 @@ if (p2Lowest === Infinity) p2Lowest = 0;
 
   return (
 
-    <div className="max-w-5xl mx-auto mt-10 bg-white p-8 rounded-2xl shadow-lg">
+    <div className="max-w-5xl mx-auto mt-10 bg-[#161f35] p-8 rounded-2xl shadow-2xl border border-white/10">
 
-      <h2 className="text-2xl font-bold mb-6">
+      <h2 className="text-2xl text-white font-bold mb-6">
         Compare Players
       </h2>
 
-      <div className="flex gap-4 mb-6">
+      <div className="flex justify-between items-center mb-10 text-white">
 
-        <select
-          className="border p-2 rounded"
-          value={player1}
-          onChange={(e)=>setPlayer1(e.target.value)}
-        >
-          <option value="">Select Player 1</option>
+  <select
+    className="bg-white/10 border border-white/20 p-2 rounded-lg"
+    value={player1}
+    onChange={(e)=>setPlayer1(e.target.value)}
+  >
+    <option value="">Select Player 1</option>
+    {players.map(p => (
+      <option key={p} value={p} className="text-black">{p}</option>
+    ))}
+  </select>
 
-          {players.map(p => (
-            <option key={p} value={p}>{p}</option>
-          ))}
+  <div className="text-3xl font-bold text-orange-500">VS</div>
 
-        </select>
+  <select
+    className="bg-white/10 border border-white/20 p-2 rounded-lg"
+    value={player2}
+    onChange={(e)=>setPlayer2(e.target.value)}
+  >
+    <option value="">Select Player 2</option>
+    {players.map(p => (
+      <option key={p} value={p} className="text-black">{p}</option>
+    ))}
+  </select>
 
+  <button
+    onClick={fetchComparison}
+    className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg"
+  >
+    Compare
+  </button>
 
-        <select
-          className="border p-2 rounded"
-          value={player2}
-          onChange={(e)=>setPlayer2(e.target.value)}
-        >
-          <option value="">Select Player 2</option>
-
-          {players.map(p => (
-            <option key={p} value={p}>{p}</option>
-          ))}
-
-        </select>
-
-
-        <button
-          onClick={fetchComparison}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          Compare
-        </button>
-
-      </div>
+</div>
 
       <div className="flex gap-6 mb-3 text-sm">
 
@@ -166,69 +172,107 @@ if (p2Lowest === Infinity) p2Lowest = 0;
 
 </div>
 
+{loadingCompare && (
+  <div className="flex flex-col items-center justify-center mt-10 text-white">
+
+    {/* VS Animation */}
+    <div className="flex items-center gap-6 text-2xl font-bold">
+
+      <span className="animate-pulse text-blue-400">
+        {player1 || "Player 1"}
+      </span>
+
+      <span className="text-orange-500 text-4xl animate-bounce">
+        ⚔️
+      </span>
+
+      <span className="animate-pulse text-orange-400">
+        {player2 || "Player 2"}
+      </span>
+
+    </div>
+
+    {/* Loading Text */}
+    <p className="mt-6 text-gray-400 animate-pulse">
+      Comparing performances...
+    </p>
+
+    {/* Loader Bar */}
+    <div className="w-64 h-2 bg-gray-700 rounded-full mt-4 overflow-hidden">
+      <div className="h-full bg-orange-500 animate-[loading_1.2s_infinite]" />
+    </div>
+
+  </div>
+)}
+
+{!loadingCompare && data.length > 0 && (
+
+  <div className="grid grid-cols-3 items-center mb-8 text-white">
+
+    <div className="text-left text-xl font-bold text-blue-400">
+      {player1}
+    </div>
+
+    <div className="text-center text-3xl text-orange-500">
+      ⚔️
+    </div>
+
+    <div className="text-right text-xl font-bold text-orange-400">
+      {player2}
+    </div>
+
+  </div>
+
+)}
+
 {data.length > 0 && (
 
-<div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+<div className="space-y-4 mb-10 text-white">
 
-  <div className="bg-gray-100 p-4 rounded">
-    Matches Played
-    <div className="font-bold text-lg">{matchesPlayed}</div>
-  </div>
+  {[
+    { label: "Matches", p1: p1Matches, p2: p2Matches },
+    { label: "Wins", p1: p1Wins, p2: p2Wins },
+    { label: "Average", p1: p1Avg, p2: p2Avg },
+    { label: "Highest", p1: p1Highest, p2: p2Highest },
+    { label: "Lowest", p1: p1Lowest, p2: p2Lowest },
+    { label: "Best Rank", p1: p1BestRank, p2: p2BestRank, reverse: true },
+    { label: "Worst Rank", p1: p1WorstRank, p2: p2WorstRank, reverse: true }
+  ].map((stat, i) => {
 
-  <div className="bg-blue-100 p-4 rounded">
-    {player1} Wins
-    <div className="font-bold text-lg">{p1Wins}</div>
-  </div>
+    const better1 = stat.reverse
+      ? stat.p1 < stat.p2
+      : stat.p1 > stat.p2;
 
-  <div className="bg-orange-100 p-4 rounded">
-    {player2} Wins
-    <div className="font-bold text-lg">{p2Wins}</div>
-  </div>
+    const better2 = stat.reverse
+      ? stat.p2 < stat.p1
+      : stat.p2 > stat.p1;
 
-  <div className="bg-gray-100 p-4 rounded">
-    Draws
-    <div className="font-bold text-lg">{draws}</div>
-  </div>
+    return (
+      <div key={i} className="grid grid-cols-3 items-center bg-[#1e293b] p-4 rounded-lg">
 
-  <div className="bg-gray-100 p-4 rounded">
-    {player1} Highest
-    <div className="font-bold text-lg">{p1Highest}</div>
-  </div>
+        {/* Player 1 */}
+        <div className={`text-left text-lg ${
+          better1 ? "text-green-400 font-bold" : "text-gray-300"
+        }`}>
+          {stat.p1}
+        </div>
 
-  <div className="bg-gray-100 p-4 rounded">
-    {player2} Highest
-    <div className="font-bold text-lg">{p2Highest}</div>
-  </div>
+        {/* Label */}
+        <div className="text-center text-sm text-gray-400">
+          {stat.label}
+        </div>
 
-  <div className="bg-gray-100 p-4 rounded">
-    {player1} Lowest
-    <div className="font-bold text-lg">{p1Lowest}</div>
-  </div>
+        {/* Player 2 */}
+        <div className={`text-right text-lg ${
+          better2 ? "text-green-400 font-bold" : "text-gray-300"
+        }`}>
+          {stat.p2}
+        </div>
 
-  <div className="bg-gray-100 p-4 rounded">
-    {player2} Lowest
-    <div className="font-bold text-lg">{p2Lowest}</div>
-  </div>
+      </div>
+    );
 
-  <div className="bg-gray-100 p-4 rounded">
-    {player1} Best Rank
-    <div className="font-bold text-lg">{p1BestRank}</div>
-  </div>
-
-  <div className="bg-gray-100 p-4 rounded">
-    {player2} Best Rank
-    <div className="font-bold text-lg">{p2BestRank}</div>
-  </div>
-
-  <div className="bg-gray-100 p-4 rounded">
-    {player1} Worst Rank
-    <div className="font-bold text-lg">{p1WorstRank}</div>
-  </div>
-
-  <div className="bg-gray-100 p-4 rounded">
-    {player2} Worst Rank
-    <div className="font-bold text-lg">{p2WorstRank}</div>
-  </div>
+  })}
 
 </div>
 
