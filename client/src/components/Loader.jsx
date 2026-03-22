@@ -30,6 +30,11 @@ const Wrapper = styled.div`
     flex-direction: column;
     align-items: center;
     gap: 18px;
+    background: rgba(30, 41, 59, 0.8);
+    width: 280px;
+    padding: 24px;
+    border-radius: 12px;
+    /* backdrop-filter: blur(10px) rgba(30, 41, 59, 0.8); */
   }
 
   /* ⚔️ Icon */
