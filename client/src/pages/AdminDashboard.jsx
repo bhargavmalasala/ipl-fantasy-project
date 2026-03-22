@@ -12,6 +12,7 @@ function AdminDashboard() {
 
   const [matchNumber, setMatchNumber] = useState("");
   const [date, setDate] = useState("");
+  const [matchName, setMatchName] = useState("")
 
   const [entries, setEntries] = useState(
     players.map(player => ({
@@ -88,6 +89,7 @@ function AdminDashboard() {
 
       await api.post(`/seasons/${season}/matches`, {
         matchNumber: Number(matchNumber),
+        matchName,
         date,
         entries: entries.map(e => ({
           name: e.name,
@@ -198,6 +200,13 @@ function AdminDashboard() {
             placeholder="Match Number"
             value={matchNumber}
             onChange={(e) => setMatchNumber(e.target.value)}
+          />
+
+          <input
+            className="w-full mb-4 px-4 py-3 rounded-lg bg-[#1e293b] border border-white/10 text-white focus:outline-none focus:border-orange-400"
+            placeholder="Match Name (eg: MI vs CSK)"
+            value={matchName}
+            onChange={(e) => setMatchName(e.target.value)}
           />
 
           <input
