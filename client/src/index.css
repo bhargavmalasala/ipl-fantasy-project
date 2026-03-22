@@ -1,17 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
 /* index.css */
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Outfit:wght@100..900&display=swap');
-
 
 @layer base {
-  html, body {
-    font-family: 'Bebas Neue', sans-serif;
+  html,
+  body {
+    font-family: "Saira", "Inter", sans-serif;
     background-color: #020617; /* same as your dark theme */
     min-height: 100%;
   }
 }
-
-
 
 .app-bg {
   min-height: 100vh;
@@ -19,17 +17,16 @@
 }
 
 @layer components {
-
   .ipl-navbar {
-  position: sticky;
-  top: 0;
-  z-index: 50;
+    position: sticky;
+    top: 0;
+    z-index: 50;
 
-  /* background: rgba(10, 25, 49, 0.6); /* semi-transparent */
-  backdrop-filter: blur(6px);
+    /* background: rgba(10, 25, 49, 0.6); /* semi-transparent */
+    backdrop-filter: blur(6px);
 
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
 
   /* subtle top highlight */
   .ipl-navbar::before {
@@ -39,32 +36,32 @@
     left: 0;
     width: 100%;
     height: 1px;
-    background: rgba(255,255,255,0.15);
+    background: rgba(255, 255, 255, 0.15);
   }
 
   .ipl-brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 
-.ipl-logo-img {
-  height: 36px;
-  width: auto;
-  object-fit: contain;
-}
+  .ipl-logo-img {
+    height: 36px;
+    width: auto;
+    object-fit: contain;
+  }
 
-.ipl-logo-text {
-  /* font-family: "Rajdhani", "Inter", sans-serif; */
-  font-size: 20px;
-  font-weight: 600;
-  color: #e6edf5;
-  letter-spacing: 1px;
-}
+  .ipl-logo-text {
+    /* font-family: "Rajdhani", "Inter", sans-serif; */
+    font-size: 20px;
+    font-weight: 600;
+    color: #e6edf5;
+    letter-spacing: 1px;
+  }
 
-.ipl-logo-text span {
-  color: oklch(75% 0.183 55.934); 
-}
+  .ipl-logo-text span {
+    color: oklch(75% 0.183 55.934);
+  }
 
   .ipl-navbar-inner {
     max-width: 1200px;
@@ -94,56 +91,56 @@
     align-items: center;
   }
 
-.ipl-link {
-  position: relative;
-  padding: 0 20px;
-  /* font-family: "Rajdhani", "Inter", sans-serif; */
-  font-size: 15px;
-  font-weight: 500;
-  color: #9fb3c8;
-  transition: all 0.25s ease;
+  .ipl-link {
+    position: relative;
+    padding: 0 20px;
+    /* font-family: "Rajdhani", "Inter", sans-serif; */
+    font-size: 15px;
+    font-weight: 500;
+    color: #9fb3c8;
+    transition: all 0.25s ease;
 
-  display: inline-block;
-}
+    display: inline-block;
+  }
 
-/* underline (hidden initially) */
-.ipl-link::before {
-  content: "";
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%) scaleX(0);
-  width: 60%;
-  height: 2px;
-  background: linear-gradient(90deg, #ff7700, #ffb347);
-  border-radius: 2px;
-  transition: transform 0.3s ease;
-}
+  /* underline (hidden initially) */
+  .ipl-link::before {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 60%;
+    height: 2px;
+    background: linear-gradient(90deg, #ff7700, #ffb347);
+    border-radius: 2px;
+    transition: transform 0.3s ease;
+  }
 
-/* hover effect */
-.ipl-link:hover {
-  color: #ffffff;
-  transform: translateY(-2px); /* slight lift */
-}
+  /* hover effect */
+  .ipl-link:hover {
+    color: #ffffff;
+    transform: translateY(-2px); /* slight lift */
+  }
 
-/* animate underline */
-.ipl-link:hover::before {
-  transform: translateX(-50%) scaleX(1);
-}
+  /* animate underline */
+  .ipl-link:hover::before {
+    transform: translateX(-50%) scaleX(1);
+  }
 
-/* subtle glow */
-.ipl-link:hover {
-  text-shadow: 0 0 8px rgba(255, 119, 0, 0.6);
+  /* subtle glow */
+  .ipl-link:hover {
+    text-shadow: 0 0 8px rgba(255, 119, 0, 0.6);
+  }
 }
-}
-
 
 /* leaderboard */
 
-
-
-
 @keyframes loading {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }

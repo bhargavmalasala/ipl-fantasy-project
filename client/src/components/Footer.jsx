@@ -36,11 +36,11 @@ function Footer({ totalMatches = 0, totalSeasons = 0, latestMatch }) {
             </span>
           </span>
 
-          {latestMatch && (
+          
             <span className="text-yellow-400 font-medium">
-              🔥 {latestMatch.matchName}
+              🔥
             </span>
-          )}
+        
 
         </div>
 

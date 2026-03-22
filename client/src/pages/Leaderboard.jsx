@@ -38,7 +38,7 @@ function Leaderboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-white">
+      <div className="min-h-[70vh] flex items-center justify-center text-white">
         <Loader />
       </div>
     );
@@ -46,23 +46,19 @@ function Leaderboard() {
 
   return (
     <div className="max-w-5xl mx-auto mt-10 bg-[#0f172a] p-8 rounded-2xl shadow-2xl border border-white/10 text-white">
-
       {/* HERO */}
-     <div className="text-center mb-6">
+      <div className="text-center mb-6">
+        <h1 className="text-3xl font-bold text-orange-400">
+          IPL Fantasy Leaderboard
+        </h1>
 
-  <h1 className="text-3xl font-bold text-orange-400">
-    IPL Fantasy Leaderboard
-  </h1>
-
-  <p className="text-gray-400 text-sm mt-1">
-    Season {season} • Updated {new Date().toLocaleDateString()}
-  </p>
-
-</div>
+        <p className="text-gray-400 text-sm mt-1">
+          Season {season} • Updated {new Date().toLocaleDateString()}
+        </p>
+      </div>
 
       {/* TABLE */}
       <table className="w-full text-sm overflow-hidden rounded-xl">
-
         {/* Header */}
         <thead>
           <tr className="bg-orange-500 text-white">
@@ -75,12 +71,10 @@ function Leaderboard() {
 
         <tbody>
           {data.map((player, index) => (
-
             <tr
               key={player.name}
               className="border-b hover:bg-orange-50/10 transition"
             >
-
               {/* Rank */}
               <td className="py-3 px-4 font-semibold">
                 {index === 0 && "🥇"}
@@ -90,9 +84,11 @@ function Leaderboard() {
               </td>
 
               {/* Player */}
-              <td className={`py-3 px-4 ${
-                index === 0 ? "text-yellow-400 font-bold" : ""
-              }`}>
+              <td
+                className={`py-3 px-4 ${
+                  index === 0 ? "text-yellow-400 font-bold" : ""
+                }`}
+              >
                 <Link
                   to={`/player/${player.name}?season=${season}`}
                   className="hover:underline"
@@ -102,42 +98,36 @@ function Leaderboard() {
               </td>
 
               {/* Wins */}
-              <td className={`py-3 px-4 ${
-                index === 0 ? " font-bold" : ""
-              }`}>
+              <td className={`py-3 px-4 ${index === 0 ? " font-bold" : ""}`}>
                 {player.wins}
               </td>
 
               {/* Points */}
-              <td className={`py-3 px-4 ${
-                index === 0 ? "text-orange-400 font-bold" : ""
-              }`}>
+              <td
+                className={`py-3 px-4 ${
+                  index === 0 ? "text-orange-400 font-bold" : ""
+                }`}
+              >
                 {player.totalPoints}
               </td>
-
             </tr>
-
           ))}
         </tbody>
-
       </table>
 
       <div className="flex justify-center mt-8">
-
-  <select
-    value={season}
-    onChange={(e) => setSeason(e.target.value)}
-    className="bg-white/10 border border-white/20 text-white px-4 py-2 rounded-lg"
-  >
-    {seasons.map((s) => (
-      <option key={s} value={s} className="text-black">
-        {s}
-      </option>
-    ))}
-  </select>
-
-</div>
-
+        <select
+          value={season}
+          onChange={(e) => setSeason(e.target.value)}
+          className="bg-white/10 border border-white/20 text-white px-4 py-2 rounded-lg"
+        >
+          {seasons.map((s) => (
+            <option key={s} value={s} className="text-black">
+              {s}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 }

@@ -21,9 +21,7 @@ function App() {
     api.get("/seasons").then((res) => {
       setSeasons(res.data);
 
-      const requests = res.data.map((s) =>
-        api.get(`/seasons/${s}/matches`)
-      );
+      const requests = res.data.map((s) => api.get(`/seasons/${s}/matches`));
 
       Promise.all(requests).then((responses) => {
         let allMatches = [];
@@ -35,28 +33,41 @@ function App() {
       });
     });
   }, []);
+
+  const latestMatch = matches.length > 0 ? matches[matches.length - 1] : null;
+
   return (
-    <div className="app-bg">
+    <div className="app-bg min-h-screen">
       <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Leaderboard />} />
-          <Route path="/login" element={<Login />} />
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute>
-                <AdminDashboard />
-              </ProtectedRoute>
-            }
+        <div className="min-h-screen flex flex-col">
+          <Navbar />
+
+          <main className="flex-1">
+            <Routes>
+              <Route path="/" element={<Leaderboard />} />
+              <Route path="/login" element={<Login />} />
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/matches" element={<MatchHistory />} />
+              <Route path="/player/:name" element={<PlayerProfile />} />
+              <Route path="/compare" element={<ComparePlayers />} />
+              <Route path="/caps" element={<Caps />} />
+            </Routes>
+          </main>
+
+          <Footer
+            totalMatches={matches.length}
+            totalSeasons={seasons.length}
+            latestMatch={latestMatch}
           />
-          <Route path="/matches" element={<MatchHistory />} />
-          <Route path="/player/:name" element={<PlayerProfile />} />
-          <Route path="/compare" element={<ComparePlayers />} />
-          <Route path="/caps" element={<Caps />} />
-        </Routes>
+        </div>
       </BrowserRouter>
-      <Footer />
     </div>
   );
 }
