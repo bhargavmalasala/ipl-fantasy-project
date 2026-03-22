@@ -68,11 +68,14 @@ function MatchHistory() {
 </div>
 
       {/* Matches */}
-      {matches.map((match) => (
+      {[...matches].reverse().map((match) => (
         <div
           key={match.id}
           className="border border-white/10 rounded-xl p-5 mb-8 bg-[#1e293b]"
         >
+
+          
+          
 
           {/* Match Header */}
           <div className="flex justify-between mb-4">
@@ -80,6 +83,11 @@ function MatchHistory() {
             <h3 className="font-semibold text-white text-lg">
               Match {match.matchNumber}
             </h3>
+
+            <h4 className="font-medium text-orange-400">
+              {match.matchName}
+            </h4>
+
 
             <span className="text-white">
               {match.date}
@@ -115,7 +123,7 @@ function MatchHistory() {
           <td className="py-3 px-4">
   <div className="flex items-center gap-2">
     <span>{entry.name}</span>
-    {entry.rank === 1 && (
+    {index == 0 && (
       <span className="text-yellow-500 text-lg">👑</span>
     )}
   </div>

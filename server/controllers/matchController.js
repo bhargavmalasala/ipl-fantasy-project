@@ -4,7 +4,7 @@ import admin from "firebase-admin";
 
 export const createMatch = async (req, res) => {
   try {
-    const { matchNumber, date, entries } = req.body;
+    const { matchNumber, matchName, date, entries } = req.body;
     const { year } = req.params;
 
     if (!matchNumber || !date || !entries || entries.length === 0) {
@@ -34,6 +34,7 @@ export const createMatch = async (req, res) => {
 
     await matchRef.set({
       matchNumber,
+      matchName,
       date,
       winnerName: winner.name,
       winningPoints: winner.points,
