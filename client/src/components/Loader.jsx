@@ -5,20 +5,20 @@ const Loader = () => {
   return (
     <Wrapper>
       <div className="loader">
-
         {/* VS Icon */}
         <div className="vs">⚔️</div>
 
         {/* Text */}
         <div className="text">
-          Loading<span>.</span><span>.</span><span>.</span>
+          Loading<span>.</span>
+          <span>.</span>
+          <span>.</span>
         </div>
 
         {/* Bar */}
         <div className="bar">
           <div className="fill" />
         </div>
-
       </div>
     </Wrapper>
   );
@@ -76,24 +76,22 @@ const Wrapper = styled.div`
 
   .fill {
     height: 100%;
-    width: 40%;
+    width: 100%;
     background: linear-gradient(90deg, #f97316, #fb923c);
     border-radius: 999px;
-    animation: loading 4s ease-out infinite;
+    transform-origin: left center;
+    animation: loading 3s linear infinite;
     box-shadow: 0 0 12px rgba(249, 115, 22, 0.7);
   }
 
   /* Animations */
 
-  @keyframes slide {
+  @keyframes loading {
     0% {
-      transform: translateX(-100%);
-    }
-    50% {
-      transform: translateX(120%);
+      transform: scaleX(0);
     }
     100% {
-      transform: translateX(120%);
+      transform: scaleX(1);
     }
   }
 

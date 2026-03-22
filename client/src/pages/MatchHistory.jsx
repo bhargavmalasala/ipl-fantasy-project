@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import Loader from "../components/Loader";
+import Footer from "../components/Footer";
 
 function MatchHistory() {
   const currentYear = new Date().getFullYear().toString();
