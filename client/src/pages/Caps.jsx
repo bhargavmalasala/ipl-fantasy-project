@@ -76,7 +76,7 @@ function Caps() {
   <img
     src={cap.img}
     alt={cap.title}
-    className={`w-20 h-20 object-contain mx-auto mb-4 ${cap.glow}`}
+    className="w-28 h-28 object-contain mx-auto mb-4 transition-transform duration-300 hover:scale-110"
   />
 
   {/* PLAYER NAME (PRIMARY) */}
@@ -97,7 +97,58 @@ function Caps() {
 </div>
         ))}
 
+
+
       </div>
+
+      {/* Cap Meaning Section */}
+<div className="max-w-5xl mx-auto mt-16 bg-[#1f2a3a] rounded-xl border border-white/10 overflow-hidden">
+
+  {/* Header */}
+  <div className="bg-orange-500 px-6 py-3 font-semibold text-white text-lg">
+    What Each Cap Represents
+  </div>
+
+  {/* Content */}
+  <div className="divide-y divide-white/10">
+
+    <div className="flex justify-between px-6 py-4">
+      <span className="text-orange-400 font-medium">Orange Cap</span>
+      <span className="text-gray-300">
+        Highest Total Points in the Season
+      </span>
+    </div>
+
+    <div className="flex justify-between px-6 py-4">
+      <span className="text-red-400 font-medium">Red Cap</span>
+      <span className="text-gray-300">
+        Single Match Highest Points
+      </span>
+    </div>
+
+    <div className="flex justify-between px-6 py-4">
+      <span className="text-gray-400 font-medium">Black Cap</span>
+      <span className="text-gray-300">
+        Single Match Lowest Points
+      </span>
+    </div>
+
+    <div className="flex justify-between px-6 py-4">
+      <span className="text-blue-400 font-medium">Blue Cap</span>
+      <span className="text-gray-300">
+        Most Wins
+      </span>
+    </div>
+
+    <div className="flex justify-between px-6 py-4">
+      <span className="text-yellow-400 font-medium">Yellow Cap</span>
+      <span className="text-gray-300">
+        Highest average points per match
+      </span>
+    </div>
+
+  </div>
+</div>
 
     </div>
   );
