@@ -2,65 +2,105 @@ import { useEffect, useState } from "react";
 import api from "../api/axios";
 
 function Caps() {
-
-  const [caps,setCaps] = useState(null);
+  const [caps, setCaps] = useState(null);
   const season = new Date().getFullYear();
 
-  useEffect(()=>{
-
+  useEffect(() => {
     api.get(`/seasons/${season}/caps`)
       .then(res => setCaps(res.data));
+  }, []);
 
-  },[]);
+  if (!caps)
+    return (
+      <div className="text-center mt-20 text-gray-300 text-lg">
+        Loading Caps...
+      </div>
+    );
 
-  if(!caps) return <p>Loading...</p>;
+  const capData = [
+    {
+      title: "Orange Cap",
+      player: caps.orangeCap.player,
+      img: "/orange.png"
+    },
+    {
+      title: "Red Cap",
+      player: caps.redCap.player,
+      img: "/red.png"
+    },
+    {
+      title: "Blue Cap",
+      player: caps.blueCap.player,
+      img: "/blue.png"
+    },
+    {
+      title: "Yellow Cap",
+      player: caps.yellowCap.player,
+      img: "/yellow.png"
+    },
+    {
+      title: "Black Cap",
+      player: caps.blackCap.player,
+      img: "/black.png"
+    }
+  ];
 
-  return(
+  return (
+    <div className="max-w-6xl mx-auto px-4 mt-16 text-white">
 
-    <div className="max-w-5xl mx-auto mt-10">
-
-      <h2 className="text-3xl font-bold mb-8">
-        Season Caps
+      {/* Heading */}
+      <h2 className="text-4xl font-extrabold text-center mb-12">
+        Season Caps 🏆
       </h2>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
+      {/* Grid */}
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-10">
 
-        <div className="text-center">
-          <div className="w-20 h-20 bg-orange-500 rounded-full mx-auto"></div>
-          <h3 className="mt-3 font-bold">Orange Cap</h3>
-          <p>{caps.orangeCap.player}</p>
-        </div>
+        {capData.map((cap, index) => (
+          <div
+  key={index}
+  className="
+    bg-white/10 backdrop-blur-lg 
+    border border-white/20 
+    rounded-2xl 
+    p-6 
+    text-center 
+    shadow-lg
+    hover:scale-105 
+    hover:shadow-2xl 
+    transition-all duration-300
+  "
+>
 
-        <div className="text-center">
-          <div className="w-20 h-20 bg-red-500 rounded-full mx-auto"></div>
-          <h3 className="mt-3 font-bold">Red Cap</h3>
-          <p>{caps.redCap.player}</p>
-        </div>
+  {/* Cap Image */}
+  <img
+    src={cap.img}
+    alt={cap.title}
+    className={`w-20 h-20 object-contain mx-auto mb-4 ${cap.glow}`}
+  />
 
-        <div className="text-center">
-          <div className="w-20 h-20 bg-blue-500 rounded-full mx-auto"></div>
-          <h3 className="mt-3 font-bold">Blue Cap</h3>
-          <p>{caps.blueCap.player}</p>
-        </div>
+  {/* PLAYER NAME (PRIMARY) */}
+  <h2 className="text-2xl font-bold tracking-wide">
+    {cap.player}
+  </h2>
 
-        <div className="text-center">
-          <div className="w-20 h-20 bg-yellow-400 rounded-full mx-auto"></div>
-          <h3 className="mt-3 font-bold">Yellow Cap</h3>
-          <p>{caps.yellowCap.player}</p>
-        </div>
+  {/* STAT (IMPORTANT) */}
+  <p className="text-lg text-yellow-300 font-semibold mt-1">
+    {cap.value}
+  </p>
 
-        <div className="text-center">
-          <div className="w-20 h-20 bg-black rounded-full mx-auto"></div>
-          <h3 className="mt-3 font-bold text-white">Black Cap</h3>
-          <p>{caps.blackCap.player}</p>
-        </div>
+  {/* CAP TITLE (SECONDARY) */}
+  <p className="text-gray-400 text-sm mt-2 uppercase tracking-wider">
+    {cap.title}
+  </p>
+
+</div>
+        ))}
 
       </div>
 
     </div>
-
   );
-
 }
 
 export default Caps;
