@@ -153,8 +153,9 @@ function AdminDashboard() {
   </h2>
 
   <button
+
     onClick={handleLogout}
-    className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
+    className="bg-red-600 cursor-pointer text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
   >
     Logout
   </button>
@@ -167,7 +168,7 @@ function AdminDashboard() {
 
         <button
           onClick={() => setTab("add")}
-          className={`px-4 py-2 rounded-lg transition ${
+          className={`px-4 py-2 cursor-pointer rounded-lg transition ${
   tab === "add"
     ? "bg-orange-500 text-white"
     : "bg-white/10 text-gray-300 hover:bg-white/20"
@@ -178,7 +179,7 @@ function AdminDashboard() {
 
         <button
           onClick={() => setTab("manage")}
-          className={`px-4 py-2 rounded-lg transition ${
+          className={`px-4 py-2 cursor-pointer rounded-lg transition ${
   tab === "manage"
     ? "bg-orange-500 text-white"
     : "bg-white/10 text-gray-300 hover:bg-white/20"
@@ -257,7 +258,7 @@ function AdminDashboard() {
 
 
             <button
-              className="bg-orange-500 text-white px-5 py-2 rounded-lg hover:bg-orange-600 transition"
+              className="bg-orange-500 cursor-pointer text-white px-5 py-2 rounded-lg hover:bg-orange-600 transition"
               onClick={handleSubmit}
             >
               Submit Match

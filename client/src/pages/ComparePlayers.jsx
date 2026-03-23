@@ -153,7 +153,7 @@ if (p2Lowest === Infinity) p2Lowest = 0;
 
   <button
     onClick={fetchComparison}
-    className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg"
+    className="bg-orange-500 cursor-pointer hover:bg-orange-600 text-white px-4 py-2 rounded-lg"
   >
     Compare
   </button>

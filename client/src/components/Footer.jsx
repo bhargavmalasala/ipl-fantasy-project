@@ -14,9 +14,11 @@ function Footer({ totalMatches = 0, totalSeasons = 0, latestMatch }) {
         {/* Center */}
         <p className="text-sm text-center">
           Built with <span className="text-red-500">❤️</span> by{" "}
+          <a href="https://github.com/bhargavmalasala" target="_blank_">
           <span className="text-orange-400 font-semibold">
             Bhargav Krishna
           </span>
+          </a>
         </p>
 
         {/* Right (Stats + Latest Match) */}
