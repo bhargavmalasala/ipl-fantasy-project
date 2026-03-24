@@ -9,17 +9,28 @@ dotenv.config();
 
 const app = express();
 
-const allowedOrigins = (process.env.CORS_ORIGIN || "http://localhost:5173")
+const normalizeOrigin = (value) => value.replace(/\/+$/, "");
+
+const allowedOrigins = (
+  process.env.CORS_ORIGIN || "http://localhost:5173,http://localhost:3000"
+)
   .split(",")
   .map((origin) => origin.trim())
+  .map((origin) => normalizeOrigin(origin))
   .filter(Boolean);
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin) {
         return callback(null, true);
       }
+
+      const normalizedRequestOrigin = normalizeOrigin(origin);
+      if (allowedOrigins.includes(normalizedRequestOrigin)) {
+        return callback(null, true);
+      }
+
       return callback(new Error("CORS blocked for this origin"));
     },
   }),
