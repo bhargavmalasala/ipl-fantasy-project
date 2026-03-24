@@ -5,9 +5,25 @@ import matchRoutes from "./routes/matchRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import { db } from "./config/firebase.js";
 
-const app = express();   
+dotenv.config();
 
-app.use(cors()); 
+const app = express();
+
+const allowedOrigins = (process.env.CORS_ORIGIN || "http://localhost:5173")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("CORS blocked for this origin"));
+    },
+  }),
+);
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
@@ -30,9 +46,6 @@ app.get("/", (req, res) => {
 //     res.status(500).send("Connection failed");
 //   }
 // });
-
-
-
 
 const PORT = process.env.PORT || 5000;
 

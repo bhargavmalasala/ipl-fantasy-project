@@ -16,22 +16,32 @@ import Caps from "./pages/Caps";
 function App() {
   const [matches, setMatches] = useState([]);
   const [seasons, setSeasons] = useState([]);
+  const [bootError, setBootError] = useState("");
 
   useEffect(() => {
-    api.get("/seasons").then((res) => {
-      setSeasons(res.data);
+    api
+      .get("/seasons")
+      .then((res) => {
+        setSeasons(res.data);
 
-      const requests = res.data.map((s) => api.get(`/seasons/${s}/matches`));
+        const requests = res.data.map((s) => api.get(`/seasons/${s}/matches`));
 
-      Promise.all(requests).then((responses) => {
+        return Promise.all(requests);
+      })
+      .then((responses) => {
         let allMatches = [];
         responses.forEach((r) => {
           allMatches = [...allMatches, ...r.data];
         });
 
         setMatches(allMatches);
+        setBootError("");
+      })
+      .catch(() => {
+        setBootError("Unable to load initial data.");
+        setMatches([]);
+        setSeasons([]);
       });
-    });
   }, []);
 
   const latestMatch = matches.length > 0 ? matches[matches.length - 1] : null;
@@ -43,6 +53,11 @@ function App() {
           <Navbar />
 
           <main className="flex-1">
+            {bootError ? (
+              <div className="max-w-5xl mx-auto mt-6 rounded-lg border border-red-400/50 bg-red-500/10 px-4 py-3 text-red-200">
+                {bootError}
+              </div>
+            ) : null}
             <Routes>
               <Route path="/" element={<Leaderboard />} />
               <Route path="/login" element={<Login />} />

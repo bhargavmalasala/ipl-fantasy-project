@@ -19,7 +19,7 @@ router.get('/seasons/:year/matches', getMatches);
 router.get('/seasons/:year/player/:name', getPlayerProfile);
 router.get('/seasons/:year/compare/:player1/:player2', comparePlayers);
 router.get('/seasons/:year/all-matches', getAllMatches);
-router.delete('/seasons/:year/matches/:matchId', deleteMatch);
+router.delete('/seasons/:year/matches/:matchId', adminAuth, deleteMatch);
 router.get('/seasons/:year/caps', getSeasonCaps);
 
 export default router;

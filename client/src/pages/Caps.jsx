@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
+import Loader from "../components/Loader";
+
 
 function Caps() {
   const [caps, setCaps] = useState(null);
@@ -11,11 +13,11 @@ function Caps() {
   }, []);
 
   if (!caps)
-    return (
-      <div className="text-center mt-20 text-gray-300 text-lg">
-        Loading Caps...
-      </div>
-    );
+  return (
+    <div className="min-h-[80vh] flex items-center justify-center">
+      <Loader />
+    </div>
+  );
 
   const capData = [
     {
@@ -46,7 +48,7 @@ function Caps() {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto px-4 mt-16 text-white">
+    <div className="max-w-6xl mx-auto px-4 mt-16 text-white ">
 
       {/* Heading */}
       <h2 className="text-4xl font-extrabold text-center mb-12">

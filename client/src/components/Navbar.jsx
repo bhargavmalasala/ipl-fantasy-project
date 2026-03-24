@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import logo from "../assets/ipl-logo.png";
 
+
 function Navbar() {
   return (
     <div className="ipl-navbar">
@@ -22,6 +23,9 @@ function Navbar() {
           </Link>
           <Link to="/compare" className="ipl-link">
             1v1
+          </Link>
+          <Link to="/caps" className="ipl-link">
+            Caps
           </Link>
           <Link to="/admin" className="ipl-link">
             Admin
