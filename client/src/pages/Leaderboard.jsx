@@ -45,75 +45,79 @@ function Leaderboard() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto mt-10 bg-[#0f172a] p-8 rounded-2xl shadow-2xl border border-white/10 text-white">
+    <div className="max-w-5xl mx-auto mt-10 bg-[#0f172a] p-4 sm:p-8 rounded-2xl shadow-2xl border border-white/10 text-white">
       {/* HERO */}
       <div className="text-center mb-6">
-        <h1 className="text-3xl font-bold text-orange-400">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-orange-400">
           IPL Fantasy Leaderboard
         </h1>
 
-        <p className="text-gray-400 text-sm mt-1">
+        <p className="text-gray-400 text-xs sm:text-sm mt-1">
           Season {season} • Updated {new Date().toLocaleDateString()}
         </p>
       </div>
 
-      {/* TABLE */}
-      <table className="w-full text-sm overflow-hidden rounded-xl">
-        {/* Header */}
-        <thead>
-          <tr className="bg-orange-500 text-white">
-            <th className="text-left py-3 px-4">Rank</th>
-            <th className="text-left py-3 px-4">Player</th>
-            <th className="text-left py-3 px-4">Wins</th>
-            <th className="text-left py-3 px-4">Points</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {data.map((player, index) => (
-            <tr
-              key={player.name}
-              className="border-b hover:bg-orange-50/10 transition"
-            >
-              {/* Rank */}
-              <td className="py-3 px-4 font-semibold">
-                {index === 0 && "🥇"}
-                {index === 1 && "🥈"}
-                {index === 2 && "🥉"}
-                {index > 2 && index + 1}
-              </td>
-
-              {/* Player */}
-              <td
-                className={`py-3 px-4 ${
-                  index === 0 ? "text-yellow-400 font-bold" : ""
-                }`}
-              >
-                <Link
-                  to={`/player/${player.name}?season=${season}`}
-                  className="hover:underline"
-                >
-                  {player.name}
-                </Link>
-              </td>
-
-              {/* Wins */}
-              <td className={`py-3 px-4 ${index === 0 ? " font-bold" : ""}`}>
-                {player.wins}
-              </td>
-
-              {/* Points */}
-              <td
-                className={`py-3 px-4 ${
-                  index === 0 ? "text-orange-400 font-bold" : ""
-                }`}
-              >
-                {player.totalPoints}
-              </td>
+      {/* TABLE - Responsive Wrapper */}
+      <div className="w-full overflow-x-auto rounded-xl">
+        <table className="w-full text-xs sm:text-sm">
+          {/* Header */}
+          <thead>
+            <tr className="bg-orange-500 text-white">
+              <th className="text-left py-2 sm:py-3 px-2 sm:px-4">Rank</th>
+              <th className="text-left py-2 sm:py-3 px-2 sm:px-4">Player</th>
+              <th className="text-left py-2 sm:py-3 px-2 sm:px-4">Wins</th>
+              <th className="text-left py-2 sm:py-3 px-2 sm:px-4">Points</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody>
+            {data.map((player, index) => (
+              <tr
+                key={player.name}
+                className="border-b hover:bg-orange-50/10 transition"
+              >
+                {/* Rank */}
+                <td className="py-2 sm:py-3 px-2 sm:px-4 font-semibold">
+                  {index === 0 && "🥇"}
+                  {index === 1 && "🥈"}
+                  {index === 2 && "🥉"}
+                  {index > 2 && index + 1}
+                </td>
+
+                {/* Player */}
+                <td
+                  className={`py-2 sm:py-3 px-2 sm:px-4 ${
+                    index === 0 ? "text-yellow-400 font-bold" : ""
+                  }`}
+                >
+                  <Link
+                    to={`/player/${player.name}?season=${season}`}
+                    className="hover:underline"
+                  >
+                    {player.name}
+                  </Link>
+                </td>
+
+                {/* Wins */}
+                <td
+                  className={`py-2 sm:py-3 px-2 sm:px-4 ${index === 0 ? " font-bold" : ""}`}
+                >
+                  {player.wins}
+                </td>
+
+                {/* Points */}
+                <td
+                  className={`py-2 sm:py-3 px-2 sm:px-4 ${
+                    index === 0 ? "text-orange-400 font-bold" : ""
+                  }`}
+                >
+                  {player.totalPoints}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <div className="flex justify-center mt-8">
         <select

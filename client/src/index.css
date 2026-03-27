@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 /* index.css */
 
@@ -66,10 +66,30 @@
   .ipl-navbar-inner {
     max-width: 1200px;
     margin: auto;
-    padding: 12px 28px;
+    padding: 12px 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+
+  @media (min-width: 640px) {
+    .ipl-navbar-inner {
+      padding: 12px 28px;
+    }
+  }
+
+  .ipl-link-mobile {
+    display: block;
+    padding: 10px 0;
+    color: #9fb3c8;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.25s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .ipl-link-mobile:hover {
+    color: #ff7700;
   }
 
   /* 🔥 Logo */

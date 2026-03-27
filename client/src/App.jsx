@@ -76,12 +76,12 @@ function App() {
             </Routes>
           </main>
 
+        </div>
           <Footer
             totalMatches={matches.length}
             totalSeasons={seasons.length}
             latestMatch={latestMatch}
           />
-        </div>
       </BrowserRouter>
     </div>
   );

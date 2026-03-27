@@ -2,66 +2,62 @@ import { useEffect, useState } from "react";
 import api from "../api/axios";
 import Loader from "../components/Loader";
 
-
 function Caps() {
   const [caps, setCaps] = useState(null);
   const season = new Date().getFullYear();
 
   useEffect(() => {
-    api.get(`/seasons/${season}/caps`)
-      .then(res => setCaps(res.data));
+    api.get(`/seasons/${season}/caps`).then((res) => setCaps(res.data));
   }, []);
 
   if (!caps)
-  return (
-    <div className="min-h-[80vh] flex items-center justify-center">
-      <Loader />
-    </div>
-  );
+    return (
+      <div className="min-h-[80vh] flex items-center justify-center">
+        <Loader />
+      </div>
+    );
 
   const capData = [
     {
       title: "Orange Cap",
       player: caps.orangeCap.player,
-      img: "/orange.png"
+      img: "/orange.png",
     },
     {
       title: "Red Cap",
       player: caps.redCap.player,
-      img: "/red.png"
+      img: "/red.png",
     },
     {
       title: "Blue Cap",
       player: caps.blueCap.player,
-      img: "/blue.png"
+      img: "/blue.png",
     },
     {
       title: "Yellow Cap",
       player: caps.yellowCap.player,
-      img: "/yellow.png"
+      img: "/yellow.png",
     },
     {
       title: "Black Cap",
       player: caps.blackCap.player,
-      img: "/black.png"
-    }
+      img: "/black.png",
+    },
   ];
 
   return (
-    <div className="max-w-6xl mx-auto px-4 mt-16 text-white ">
-
+    <div className="max-w-6xl mx-auto px-4 mt-10 sm:mt-16 text-white">
       {/* Heading */}
-      <h2 className="text-4xl font-extrabold text-center mb-12">
+      <h2 className="text-2xl sm:text-4xl font-extrabold text-center mb-8 sm:mb-12">
         Season Caps 🏆
       </h2>
 
       {/* Grid */}
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-10">
-
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-8">
         {capData.map((cap, index) => (
           <div
-  key={index}
-  className="
+            key={index}
+            className="
     bg-white/10 backdrop-blur-lg 
     border border-white/20 
     rounded-2xl 
@@ -72,86 +68,69 @@ function Caps() {
     hover:shadow-2xl 
     transition-all duration-300
   "
->
+          >
+            {/* Cap Image */}
+            <img
+              src={cap.img}
+              alt={cap.title}
+              className="w-28 h-28 object-contain mx-auto mb-4 transition-transform duration-300 hover:scale-110"
+            />
 
-  {/* Cap Image */}
-  <img
-    src={cap.img}
-    alt={cap.title}
-    className="w-28 h-28 object-contain mx-auto mb-4 transition-transform duration-300 hover:scale-110"
-  />
+            {/* PLAYER NAME (PRIMARY) */}
+            <h2 className="text-2xl font-bold tracking-wide">{cap.player}</h2>
 
-  {/* PLAYER NAME (PRIMARY) */}
-  <h2 className="text-2xl font-bold tracking-wide">
-    {cap.player}
-  </h2>
+            {/* STAT (IMPORTANT) */}
+            <p className="text-lg text-yellow-300 font-semibold mt-1">
+              {cap.value}
+            </p>
 
-  {/* STAT (IMPORTANT) */}
-  <p className="text-lg text-yellow-300 font-semibold mt-1">
-    {cap.value}
-  </p>
-
-  {/* CAP TITLE (SECONDARY) */}
-  <p className="text-gray-400 text-sm mt-2 uppercase tracking-wider">
-    {cap.title}
-  </p>
-
-</div>
+            {/* CAP TITLE (SECONDARY) */}
+            <p className="text-gray-400 text-sm mt-2 uppercase tracking-wider">
+              {cap.title}
+            </p>
+          </div>
         ))}
-
-
-
       </div>
 
       {/* Cap Meaning Section */}
-<div className="max-w-5xl mx-auto mt-16 bg-[#1f2a3a] rounded-xl border border-white/10 overflow-hidden">
+      <div className="max-w-5xl mx-auto mt-16 bg-[#1f2a3a] rounded-xl border border-white/10 overflow-hidden">
+        {/* Header */}
+        <div className="bg-orange-500 px-6 py-3 font-semibold text-white text-lg">
+          What Each Cap Represents
+        </div>
 
-  {/* Header */}
-  <div className="bg-orange-500 px-6 py-3 font-semibold text-white text-lg">
-    What Each Cap Represents
-  </div>
+        {/* Content */}
+        <div className="divide-y divide-white/10">
+          <div className="flex justify-between px-6 py-4">
+            <span className="text-orange-400 font-medium">Orange Cap</span>
+            <span className="text-gray-300">
+              Highest Total Points in the Season
+            </span>
+          </div>
 
-  {/* Content */}
-  <div className="divide-y divide-white/10">
+          <div className="flex justify-between px-6 py-4">
+            <span className="text-red-400 font-medium">Red Cap</span>
+            <span className="text-gray-300">Single Match Highest Points</span>
+          </div>
 
-    <div className="flex justify-between px-6 py-4">
-      <span className="text-orange-400 font-medium">Orange Cap</span>
-      <span className="text-gray-300">
-        Highest Total Points in the Season
-      </span>
-    </div>
+          <div className="flex justify-between px-6 py-4">
+            <span className="text-gray-400 font-medium">Black Cap</span>
+            <span className="text-gray-300">Single Match Lowest Points</span>
+          </div>
 
-    <div className="flex justify-between px-6 py-4">
-      <span className="text-red-400 font-medium">Red Cap</span>
-      <span className="text-gray-300">
-        Single Match Highest Points
-      </span>
-    </div>
+          <div className="flex justify-between px-6 py-4">
+            <span className="text-blue-400 font-medium">Blue Cap</span>
+            <span className="text-gray-300">Most Wins</span>
+          </div>
 
-    <div className="flex justify-between px-6 py-4">
-      <span className="text-gray-400 font-medium">Black Cap</span>
-      <span className="text-gray-300">
-        Single Match Lowest Points
-      </span>
-    </div>
-
-    <div className="flex justify-between px-6 py-4">
-      <span className="text-blue-400 font-medium">Blue Cap</span>
-      <span className="text-gray-300">
-        Most Wins
-      </span>
-    </div>
-
-    <div className="flex justify-between px-6 py-4">
-      <span className="text-yellow-400 font-medium">Yellow Cap</span>
-      <span className="text-gray-300">
-        Highest average points per match
-      </span>
-    </div>
-
-  </div>
-</div>
-
+          <div className="flex justify-between px-6 py-4">
+            <span className="text-yellow-400 font-medium">Yellow Cap</span>
+            <span className="text-gray-300">
+              Highest average points per match
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

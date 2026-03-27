@@ -38,12 +38,14 @@ function MatchHistory() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto mt-10 bg-[#0f172a] p-8 rounded-2xl shadow-2xl border border-white/10 text-white">
+    <div className="max-w-5xl mx-auto mt-10 bg-[#0f172a] p-4 sm:p-8 rounded-2xl shadow-2xl border border-white/10 text-white">
       {/* Header */}
       <div className="text-center mb-6">
-        <h2 className="text-3xl font-bold text-orange-400">Match History</h2>
+        <h2 className="text-2xl sm:text-3xl font-bold text-orange-400">
+          Match History
+        </h2>
 
-        <p className="text-gray-400 text-sm mt-1">Season {season}</p>
+        <p className="text-gray-400 text-xs sm:text-sm mt-1">Season {season}</p>
       </div>
       <div className="flex justify-center mt-8 mb-8">
         <select
@@ -63,10 +65,10 @@ function MatchHistory() {
       {[...matches].reverse().map((match) => (
         <div
           key={match.id}
-          className="border border-white/10 rounded-xl p-5 mb-8 bg-[#1e293b]"
+          className="border border-white/10 rounded-xl p-3 sm:p-5 mb-8 bg-[#1e293b]"
         >
           {/* Match Header */}
-          <div className="flex justify-between mb-4">
+          <div className="flex flex-col sm:flex-row justify-between gap-2 mb-4 text-sm sm:text-base">
             <h3 className="font-semibold text-white text-lg">
               Match {match.matchNumber}
             </h3>
