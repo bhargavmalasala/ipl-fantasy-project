@@ -76,21 +76,39 @@ function AdminDashboard() {
       return;
     }
 
+    const filledEntries = entries.filter(
+      (e) => e.points !== "" || e.rank !== "",
+    );
+
+    if (filledEntries.length === 0) {
+      alert("Enter at least one player's points and rank");
+      return;
+    }
+
+    const hasIncompleteRow = filledEntries.some(
+      (e) => e.points === "" || e.rank === "",
+    );
+
+    if (hasIncompleteRow) {
+      alert("For each entered player, fill both points and rank");
+      return;
+    }
+
     const season = date.split("-")[0];
 
     try {
-      await api.post(`/seasons/${season}/matches`, {
+      const res = await api.post(`/seasons/${season}/matches`, {
         matchNumber: Number(matchNumber),
         matchName,
         date,
-        entries: entries.map((e) => ({
+        entries: filledEntries.map((e) => ({
           name: e.name,
           points: Number(e.points),
           rank: Number(e.rank),
         })),
       });
 
-      alert("Match added successfully!");
+      alert(res?.data?.message || "Match saved successfully!");
 
       setEntries(
         players.map((player) => ({

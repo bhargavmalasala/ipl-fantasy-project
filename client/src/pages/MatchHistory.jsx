@@ -67,52 +67,85 @@ function MatchHistory() {
           key={match.id}
           className="border border-white/10 rounded-xl p-3 sm:p-5 mb-8 bg-[#1e293b]"
         >
-          {/* Match Header */}
-          <div className="flex flex-col sm:flex-row justify-between gap-2 mb-4 text-sm sm:text-base">
-            <h3 className="font-semibold text-white text-lg">
-              Match {match.matchNumber}
-            </h3>
+          {(() => {
+            const sortedEntries = [...match.entries].sort((a, b) => {
+              const aPlayed = a.rank > 0;
+              const bPlayed = b.rank > 0;
 
-            <h4 className="font-medium text-orange-400">{match.matchName}</h4>
+              if (aPlayed !== bPlayed) {
+                return aPlayed ? -1 : 1;
+              }
 
-            <span className="text-white">{match.date}</span>
-          </div>
+              if (aPlayed && bPlayed) {
+                if (a.rank !== b.rank) return a.rank - b.rank;
+                return b.points - a.points;
+              }
 
-          {/* Match Table */}
-          <table className="w-full text-sm border-collapse overflow-hidden rounded-xl">
-            {/* Orange Header */}
-            <thead>
-              <tr className="bg-orange-500 text-white">
-                <th className="text-left py-3 px-4">Rank</th>
-                <th className="text-left py-3 px-4">Player</th>
-                <th className="text-left py-3 px-4">Points</th>
-              </tr>
-            </thead>
+              if (b.points !== a.points) return b.points - a.points;
+              return a.name.localeCompare(b.name);
+            });
 
-            <tbody>
-              {match.entries
-                .sort((a, b) => a.rank - b.rank)
-                .map((entry, index) => (
-                  <tr
-                    key={entry.name}
-                    className="border-b border-white/10 hover:bg-orange-50/10 transition"
-                  >
-                    <td className="py-3 px-4 font-semibold">{entry.rank}</td>
+            const winnerName = sortedEntries.find(
+              (entry) => entry.rank > 0,
+            )?.name;
 
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-2">
-                        <span>{entry.name}</span>
-                        {index == 0 && (
-                          <span className="text-yellow-500 text-lg">👑</span>
-                        )}
-                      </div>
-                    </td>
+            return (
+              <>
+                {/* Match Header */}
+                <div className="flex flex-col sm:flex-row justify-between gap-2 mb-4 text-sm sm:text-base">
+                  <h3 className="font-semibold text-white text-lg">
+                    Match {match.matchNumber}
+                  </h3>
 
-                    <td className="py-3 px-4 font-medium">{entry.points}</td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+                  <h4 className="font-medium text-orange-400">
+                    {match.matchName}
+                  </h4>
+
+                  <span className="text-white">{match.date}</span>
+                </div>
+
+                {/* Match Table */}
+                <table className="w-full text-sm border-collapse overflow-hidden rounded-xl">
+                  {/* Orange Header */}
+                  <thead>
+                    <tr className="bg-orange-500 text-white">
+                      <th className="text-left py-3 px-4">Rank</th>
+                      <th className="text-left py-3 px-4">Player</th>
+                      <th className="text-left py-3 px-4">Points</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {sortedEntries.map((entry) => (
+                      <tr
+                        key={entry.name}
+                        className="border-b border-white/10 hover:bg-orange-50/10 transition"
+                      >
+                        <td className="py-3 px-4 font-semibold">
+                          {entry.rank}
+                        </td>
+
+                        <td className="py-3 px-4">
+                          <div className="flex items-center gap-2">
+                            <span>{entry.name}</span>
+                            {winnerName === entry.name && (
+                              <span className="text-yellow-500 text-lg">
+                                👑
+                              </span>
+                            )}
+                          </div>
+                        </td>
+
+                        <td className="py-3 px-4 font-medium">
+                          {entry.points}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </>
+            );
+          })()}
         </div>
       ))}
     </div>

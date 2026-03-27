@@ -16,16 +16,89 @@ export const createMatch = async (req, res) => {
     const matchRef = seasonRef.collection("matches").doc(matchId);
 
     const existingMatch = await matchRef.get();
+
+    const normalizedEntries = entries.map((entry) => ({
+      name: entry.name,
+      points: Number(entry.points) || 0,
+      rank: Number(entry.rank) || 0,
+    }));
+
+    let finalEntries = [...normalizedEntries];
+
     if (existingMatch.exists) {
-      return res.status(400).json({ message: "Match already exists" });
+      const existingEntriesSnapshot = await matchRef
+        .collection("entries")
+        .get();
+      const existingEntriesByName = new Map();
+
+      existingEntriesSnapshot.docs.forEach((doc) => {
+        const data = doc.data();
+        if (!data?.name) return;
+
+        existingEntriesByName.set(data.name, {
+          ref: doc.ref,
+          name: data.name,
+          points: Number(data.points) || 0,
+          rank: Number(data.rank) || 0,
+        });
+      });
+
+      const mergeBatch = db.batch();
+
+      normalizedEntries.forEach((entry) => {
+        const existingEntry = existingEntriesByName.get(entry.name);
+
+        if (!existingEntry) {
+          const newEntryRef = matchRef.collection("entries").doc();
+          mergeBatch.set(newEntryRef, entry);
+          return;
+        }
+
+        if (
+          existingEntry.points !== entry.points ||
+          existingEntry.rank !== entry.rank
+        ) {
+          mergeBatch.set(existingEntry.ref, entry, { merge: true });
+        }
+
+        existingEntriesByName.delete(entry.name);
+      });
+
+      await mergeBatch.commit();
+
+      finalEntries = [
+        ...normalizedEntries,
+        ...Array.from(existingEntriesByName.values()).map((entry) => ({
+          name: entry.name,
+          points: entry.points,
+          rank: entry.rank,
+        })),
+      ];
+    } else {
+      const batch = db.batch();
+
+      normalizedEntries.forEach((entry) => {
+        const entryRef = matchRef.collection("entries").doc();
+        batch.set(entryRef, entry);
+      });
+
+      await batch.commit();
     }
 
-    entries.sort((a, b) => {
+    // Rank 0 means did not play. Winner is decided among played players.
+    const rankedEntries = finalEntries
+      .filter((entry) => entry.rank > 0)
+      .sort((a, b) => {
+        if (a.rank !== b.rank) return a.rank - b.rank;
+        return b.points - a.points;
+      });
+
+    const fallbackEntries = [...finalEntries].sort((a, b) => {
       if (b.points !== a.points) return b.points - a.points;
       return a.rank - b.rank;
     });
 
-    const winner = entries[0];
+    const winner = rankedEntries[0] || fallbackEntries[0];
 
     const seasonDoc = await seasonRef.get();
     if (!seasonDoc.exists) {
@@ -36,23 +109,20 @@ export const createMatch = async (req, res) => {
       matchNumber,
       matchName,
       date,
-      winnerName: winner.name,
-      winningPoints: winner.points,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      winnerName: winner?.name || "",
+      winningPoints: winner?.points || 0,
+      createdAt: existingMatch.exists
+        ? existingMatch.data()?.createdAt ||
+          admin.firestore.FieldValue.serverTimestamp()
+        : admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
     });
 
-    const batch = db.batch();
-
-    entries.forEach((entry) => {
-      const entryRef = matchRef.collection("entries").doc();
-      batch.set(entryRef, entry);
-    });
-
-    await batch.commit();
-
-    return res.status(201).json({
-      message: "Match created successfully",
-      winner: winner.name,
+    return res.status(existingMatch.exists ? 200 : 201).json({
+      message: existingMatch.exists
+        ? "Match updated successfully"
+        : "Match created successfully",
+      winner: winner?.name || "",
     });
   } catch (error) {
     console.error(error);
