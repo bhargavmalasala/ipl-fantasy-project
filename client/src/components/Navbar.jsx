@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logo from "../assets/ipl-logo.png";
+import logo from "../assets/stumpr.png";
 import { useState } from "react";
 
 function Navbar() {
@@ -8,13 +8,13 @@ function Navbar() {
   return (
     <div className="ipl-navbar">
       <div className="ipl-navbar-inner">
-        <div className="ipl-brand">
-          <img src={logo} alt="IPL Logo" className="ipl-logo-img" />
-          <h1 className="ipl-logo-text hidden sm:inline">
-             IPL <span>Fantasy Tracker</span>
-          </h1>
-          <h1 className="ipl-logo-text sm:hidden">IPL</h1>
-        </div>
+        <Link to="/" className="ipl-link">
+          <div className="ipl-brand">
+            <img src={logo} alt="Stumpr Logo" className="ipl-logo-img" />
+            {/* <h1 className="ipl-logo-text hidden sm:inline">Stumpr</h1>
+            <h1 className="ipl-logo-text sm:hidden">Stumpr</h1> */}
+          </div>
+        </Link>
 
         {/* Desktop Links */}
         <div className="ipl-links hidden md:flex">

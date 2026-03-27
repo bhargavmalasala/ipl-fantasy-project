@@ -41,7 +41,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api", matchRoutes);
 
 app.get("/", (req, res) => {
-  res.send("IPL Fantasy Tracker API Running");
+  res.send("Stumpr API Running");
 });
 
 //  Firestore test route

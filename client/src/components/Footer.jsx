@@ -3,51 +3,35 @@ import React from "react";
 function Footer({ totalMatches = 0, totalSeasons = 0, latestMatch }) {
   return (
     <footer className="bg-[#020617]/90 backdrop-blur-md border-t border-white/10 text-gray-400 mt-10">
-      
       <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-4">
-
         {/* Left */}
-        <p className="text-sm">
-          © {new Date().getFullYear()} IPL Fantasy Tracker
-        </p>
+        <p className="text-sm">© {new Date().getFullYear()} Stumpr</p>
 
         {/* Center */}
         <p className="text-sm text-center">
           Built with <span className="text-red-500">❤️</span> by{" "}
           <a href="https://github.com/bhargavmalasala" target="_blank_">
-          <span className="text-orange-400 font-semibold">
-            Bhargav Krishna
-          </span>
+            <span className="text-orange-400 font-semibold">
+              Bhargav Krishna
+            </span>
           </a>
         </p>
 
         {/* Right (Stats + Latest Match) */}
         <div className="flex flex-col md:flex-row items-center gap-3 text-sm">
-
           <span>
             Matches:{" "}
-            <span className="text-orange-400 font-medium">
-              {totalMatches}
-            </span>
+            <span className="text-orange-400 font-medium">{totalMatches}</span>
           </span>
 
           <span>
             Seasons:{" "}
-            <span className="text-orange-400 font-medium">
-              {totalSeasons}
-            </span>
+            <span className="text-orange-400 font-medium">{totalSeasons}</span>
           </span>
 
-          
-            <span className="text-yellow-400 font-medium">
-              🔥
-            </span>
-        
-
+          <span className="text-yellow-400 font-medium">🔥</span>
         </div>
-
       </div>
-
     </footer>
   );
 }
