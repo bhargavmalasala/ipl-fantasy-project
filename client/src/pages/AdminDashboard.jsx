@@ -226,7 +226,11 @@ function AdminDashboard() {
           ))}
 
           <div className="flex gap-3 mt-4">
-            <button className="w-full sm:w-auto bg-orange-500 cursor-pointer text-white px-5 py-2 rounded-lg hover:bg-orange-600 transition">
+            <button
+              onClick={handleSubmit}
+              disabled={!matchNumber || !matchName || !date}
+              className="w-full sm:w-auto bg-orange-500 cursor-pointer text-white px-5 py-2 rounded-lg hover:bg-orange-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               Submit Match
             </button>
           </div>
