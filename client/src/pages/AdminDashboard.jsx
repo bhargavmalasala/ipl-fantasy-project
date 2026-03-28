@@ -3,12 +3,15 @@ import api from "../api/axios";
 import { useNavigate } from "react-router-dom";
 
 const players = [
-  "Bhargav",
-  "Kartheek",
-  "Rishiraj",
-  "Sandeep",
   "Abhiram",
-  "Ram Charan",
+  "Bhargav",
+  "Chandu",
+  "Kartheek",
+  "Living Stone",
+  "Rishiraj",
+  "Rishith",
+  "Sandeep",
+  "Yashwant",
 ];
 
 function AdminDashboard() {
