@@ -5,11 +5,16 @@ import { useNavigate } from "react-router-dom";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(true);
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
-      const res = await api.post("/auth/login", { email, password });
+      const res = await api.post("/auth/login", {
+        email,
+        password,
+        rememberMe,
+      });
       localStorage.setItem("token", res.data.token);
       navigate("/admin");
     } catch (error) {
@@ -42,6 +47,16 @@ function Login() {
             placeholder="Password"
             onChange={(e) => setPassword(e.target.value)}
           />
+
+          <label className="flex items-center gap-2 text-sm text-gray-300">
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              className="h-4 w-4 accent-orange-500"
+            />
+            Remember this device
+          </label>
 
           <button
             onClick={handleLogin}
