@@ -401,12 +401,27 @@ export const getSeasonCaps = async (req, res) => {
 
     // Entries are stored in each match's subcollection, not inside the match document.
     for (const matchDoc of matchesSnapshot.docs) {
+      const matchData = matchDoc.data();
+      const winnerName = matchData?.winnerName;
+
+      if (winnerName) {
+        if (!playerStats[winnerName]) {
+          playerStats[winnerName] = {
+            totalPoints: 0,
+            matches: 0,
+            wins: 0,
+          };
+        }
+        playerStats[winnerName].wins += 1;
+      }
+
       const entriesSnapshot = await matchDoc.ref.collection("entries").get();
 
       entriesSnapshot.forEach((entryDoc) => {
-        const { name, points, rank } = entryDoc.data();
+        const { name, points } = entryDoc.data();
+        const normalizedPoints = Number(points);
 
-        if (!name || typeof points !== "number" || typeof rank !== "number") {
+        if (!name || Number.isNaN(normalizedPoints)) {
           return;
         }
 
@@ -418,19 +433,15 @@ export const getSeasonCaps = async (req, res) => {
           };
         }
 
-        playerStats[name].totalPoints += points;
+        playerStats[name].totalPoints += normalizedPoints;
         playerStats[name].matches += 1;
 
-        if (rank === 1) {
-          playerStats[name].wins += 1;
+        if (normalizedPoints > highestScore.points) {
+          highestScore = { player: name, points: normalizedPoints };
         }
 
-        if (points > highestScore.points) {
-          highestScore = { player: name, points };
-        }
-
-        if (points > 0 && points < lowestScore.points) {
-          lowestScore = { player: name, points };
+        if (normalizedPoints > 0 && normalizedPoints < lowestScore.points) {
+          lowestScore = { player: name, points: normalizedPoints };
         }
       });
     }
