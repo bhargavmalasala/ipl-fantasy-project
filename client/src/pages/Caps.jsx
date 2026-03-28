@@ -4,11 +4,24 @@ import Loader from "../components/Loader";
 
 function Caps() {
   const [caps, setCaps] = useState(null);
-  const season = new Date().getFullYear();
+  const [seasons, setSeasons] = useState([]);
+  const [season, setSeason] = useState("");
 
   useEffect(() => {
-    api.get(`/seasons/${season}/caps`).then((res) => setCaps(res.data));
+    api.get("/seasons").then((res) => {
+      setSeasons(res.data);
+      if (res.data.length > 0) {
+        setSeason(res.data[0]);
+      }
+    });
   }, []);
+
+  useEffect(() => {
+    if (!season) return;
+
+    setCaps(null);
+    api.get(`/seasons/${season}/caps`).then((res) => setCaps(res.data));
+  }, [season]);
 
   if (!caps)
     return (
@@ -21,26 +34,36 @@ function Caps() {
     {
       title: "Orange Cap",
       player: caps.orangeCap.player,
+      value: caps.orangeCap.points,
+      unit: "Points",
       img: "/orange.png",
     },
     {
       title: "Red Cap",
       player: caps.redCap.player,
+      value: caps.redCap.points,
+      unit: "Points",
       img: "/red.png",
     },
     {
       title: "Blue Cap",
       player: caps.blueCap.player,
+      value: caps.blueCap.wins,
+      unit: "Wins",
       img: "/blue.png",
     },
     {
       title: "Yellow Cap",
       player: caps.yellowCap.player,
+      value: caps.yellowCap.avg,
+      unit: "Avg",
       img: "/yellow.png",
     },
     {
       title: "Black Cap",
       player: caps.blackCap.player,
+      value: caps.blackCap.points,
+      unit: "Points",
       img: "/black.png",
     },
   ];
@@ -49,8 +72,22 @@ function Caps() {
     <div className="max-w-6xl mx-auto px-4 mt-10 sm:mt-16 text-white">
       {/* Heading */}
       <h2 className="text-2xl sm:text-4xl font-extrabold text-center mb-8 sm:mb-12">
-        Season Caps 🏆
+        Season {season} Caps 🏆
       </h2>
+
+      <div className="flex justify-center mb-8">
+        <select
+          value={season}
+          onChange={(e) => setSeason(e.target.value)}
+          className="bg-white/10 border border-white/20 text-white px-4 py-2 rounded-lg"
+        >
+          {seasons.map((s) => (
+            <option key={s} value={s} className="text-black">
+              {s}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {/* Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-8">
@@ -81,7 +118,7 @@ function Caps() {
 
             {/* STAT (IMPORTANT) */}
             <p className="text-lg text-yellow-300 font-semibold mt-1">
-              {cap.value}
+              {cap.value} {cap.unit}
             </p>
 
             {/* CAP TITLE (SECONDARY) */}
