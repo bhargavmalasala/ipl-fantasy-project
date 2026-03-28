@@ -6,6 +6,7 @@ const players = [
   "Abhiram",
   "Bhargav",
   "Chandu",
+  "Durgesh",
   "Kartheek",
   "Living Stone",
   "Rishiraj",
