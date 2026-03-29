@@ -8,14 +8,14 @@ const CAPS_CACHE_PREFIX = "caps-cache-v1:";
 
 const readCache = (key) => {
   try {
-    const rawValue = sessionStorage.getItem(key);
+    const rawValue = localStorage.getItem(key);
     if (!rawValue) return null;
 
     const parsed = JSON.parse(rawValue);
     if (!parsed?.timestamp || !parsed?.data) return null;
 
     if (Date.now() - parsed.timestamp > CACHE_TTL_MS) {
-      sessionStorage.removeItem(key);
+      localStorage.removeItem(key);
       return null;
     }
 
@@ -27,7 +27,7 @@ const readCache = (key) => {
 
 const writeCache = (key, data) => {
   try {
-    sessionStorage.setItem(
+    localStorage.setItem(
       key,
       JSON.stringify({
         timestamp: Date.now(),
