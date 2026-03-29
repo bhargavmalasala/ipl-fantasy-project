@@ -1,6 +1,19 @@
-import { match } from "assert";
 import { db } from "../config/firebase.js";
 import admin from "firebase-admin";
+
+const loadEntriesByMatchId = async (matchDocs) => {
+  const entriesResults = await Promise.all(
+    matchDocs.map(async (matchDoc) => {
+      const entriesSnapshot = await matchDoc.ref.collection("entries").get();
+      return [
+        matchDoc.id,
+        entriesSnapshot.docs.map((entryDoc) => entryDoc.data()),
+      ];
+    }),
+  );
+
+  return new Map(entriesResults);
+};
 
 export const createMatch = async (req, res) => {
   try {
@@ -145,26 +158,35 @@ export const getLeaderboard = async (req, res) => {
         .json({ message: "No matches found for this season" });
     }
 
+    const matchDocs = matchesSnapshot.docs;
+    const entriesByMatchId = await loadEntriesByMatchId(matchDocs);
     const leaderboard = {};
 
-    for (const matchDoc of matchesSnapshot.docs) {
+    for (const matchDoc of matchDocs) {
       const matchData = matchDoc.data();
       const winner = matchData.winnerName;
 
-      //Count wins
-      if (!leaderboard[winner]) {
-        leaderboard[winner] = { wins: 0, totalPoints: 0 };
+      // Count wins from match-level winner field.
+      if (winner) {
+        if (!leaderboard[winner]) {
+          leaderboard[winner] = { wins: 0, totalPoints: 0 };
+        }
+        leaderboard[winner].wins += 1;
       }
-      leaderboard[winner].wins += 1;
 
-      const entriesSnapshot = await matchDoc.ref.collection("entries").get();
-      entriesSnapshot.forEach((entryDoc) => {
-        const { name, points } = entryDoc.data();
+      const entries = entriesByMatchId.get(matchDoc.id) || [];
+      entries.forEach((entry) => {
+        const { name, points } = entry;
+        const normalizedPoints = Number(points);
+
+        if (!name || Number.isNaN(normalizedPoints)) {
+          return;
+        }
 
         if (!leaderboard[name]) {
           leaderboard[name] = { wins: 0, totalPoints: 0 };
         }
-        leaderboard[name].totalPoints += points;
+        leaderboard[name].totalPoints += normalizedPoints;
       });
     }
 
@@ -221,19 +243,19 @@ export const getMatches = async (req, res) => {
       .orderBy("matchNumber")
       .get();
 
-    const matches = [];
+    const matchDocs = matchesSnapshot.docs;
+    const entriesByMatchId = await loadEntriesByMatchId(matchDocs);
 
-    for (const doc of matchesSnapshot.docs) {
+    const matches = matchDocs.map((doc) => {
       const matchData = doc.data();
-      const entriesSnapshot = await doc.ref.collection("entries").get();
-      const entries = entriesSnapshot.docs.map((e) => e.data());
+      const entries = entriesByMatchId.get(doc.id) || [];
 
-      matches.push({
+      return {
         id: doc.id,
         ...matchData,
         entries,
-      });
-    }
+      };
+    });
 
     return res.json(matches);
   } catch (error) {
@@ -252,6 +274,8 @@ export const getPlayerProfile = async (req, res) => {
       .collection("matches")
       .orderBy("matchNumber");
     const matchesSnapshot = await matchesRef.get();
+    const matchDocs = matchesSnapshot.docs;
+    const entriesByMatchId = await loadEntriesByMatchId(matchDocs);
 
     let totalPoints = 0;
     let wins = 0;
@@ -260,13 +284,11 @@ export const getPlayerProfile = async (req, res) => {
 
     const history = [];
 
-    for (const matchDoc of matchesSnapshot.docs) {
+    for (const matchDoc of matchDocs) {
       const matchData = matchDoc.data();
 
-      const entriesSnapshot = await matchDoc.ref.collection("entries").get();
-      const entry = entriesSnapshot.docs
-        .map((e) => e.data())
-        .find((e) => e.name === name);
+      const entries = entriesByMatchId.get(matchDoc.id) || [];
+      const entry = entries.find((e) => e.name === name);
 
       if (!entry) continue;
 
@@ -315,13 +337,14 @@ export const comparePlayers = async (req, res) => {
     .collection("matches")
     .orderBy("matchNumber")
     .get();
+  const matchDocs = matchSnapshot.docs;
+  const entriesByMatchId = await loadEntriesByMatchId(matchDocs);
 
   const history = [];
 
-  for (const matchDoc of matchSnapshot.docs) {
+  for (const matchDoc of matchDocs) {
     const matchData = matchDoc.data();
-    const entriesSnapshot = await matchDoc.ref.collection("entries").get();
-    const entries = entriesSnapshot.docs.map((d) => d.data());
+    const entries = entriesByMatchId.get(matchDoc.id) || [];
 
     const p1 = entries.find((e) => e.name === player1);
     const p2 = entries.find((e) => e.name === player2);
@@ -393,6 +416,8 @@ export const getSeasonCaps = async (req, res) => {
       .doc(year)
       .collection("matches")
       .get();
+    const matchDocs = matchesSnapshot.docs;
+    const entriesByMatchId = await loadEntriesByMatchId(matchDocs);
 
     const playerStats = {};
 
@@ -400,7 +425,7 @@ export const getSeasonCaps = async (req, res) => {
     let lowestScore = { player: "", points: Infinity };
 
     // Entries are stored in each match's subcollection, not inside the match document.
-    for (const matchDoc of matchesSnapshot.docs) {
+    for (const matchDoc of matchDocs) {
       const matchData = matchDoc.data();
       const winnerName = matchData?.winnerName;
 
@@ -415,10 +440,9 @@ export const getSeasonCaps = async (req, res) => {
         playerStats[winnerName].wins += 1;
       }
 
-      const entriesSnapshot = await matchDoc.ref.collection("entries").get();
-
-      entriesSnapshot.forEach((entryDoc) => {
-        const { name, points } = entryDoc.data();
+      const entries = entriesByMatchId.get(matchDoc.id) || [];
+      entries.forEach((entry) => {
+        const { name, points } = entry;
         const normalizedPoints = Number(points);
 
         if (!name || Number.isNaN(normalizedPoints)) {

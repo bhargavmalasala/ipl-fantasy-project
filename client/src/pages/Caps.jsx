@@ -2,25 +2,94 @@ import { useEffect, useState } from "react";
 import api from "../api/axios";
 import Loader from "../components/Loader";
 
+const CACHE_TTL_MS = 5 * 60 * 1000;
+const SEASONS_CACHE_KEY = "seasons-cache-v1";
+const CAPS_CACHE_PREFIX = "caps-cache-v1:";
+
+const readCache = (key) => {
+  try {
+    const rawValue = sessionStorage.getItem(key);
+    if (!rawValue) return null;
+
+    const parsed = JSON.parse(rawValue);
+    if (!parsed?.timestamp || !parsed?.data) return null;
+
+    if (Date.now() - parsed.timestamp > CACHE_TTL_MS) {
+      sessionStorage.removeItem(key);
+      return null;
+    }
+
+    return parsed.data;
+  } catch {
+    return null;
+  }
+};
+
+const writeCache = (key, data) => {
+  try {
+    sessionStorage.setItem(
+      key,
+      JSON.stringify({
+        timestamp: Date.now(),
+        data,
+      }),
+    );
+  } catch {
+    // Ignore cache write errors.
+  }
+};
+
 function Caps() {
   const [caps, setCaps] = useState(null);
   const [seasons, setSeasons] = useState([]);
   const [season, setSeason] = useState("");
 
   useEffect(() => {
-    api.get("/seasons").then((res) => {
-      setSeasons(res.data);
-      if (res.data.length > 0) {
-        setSeason(res.data[0]);
-      }
-    });
+    const cachedSeasons = readCache(SEASONS_CACHE_KEY);
+    if (cachedSeasons?.length) {
+      setSeasons(cachedSeasons);
+      setSeason(cachedSeasons[0]);
+    }
+
+    api
+      .get("/seasons")
+      .then((res) => {
+        setSeasons(res.data);
+        writeCache(SEASONS_CACHE_KEY, res.data);
+
+        if (!cachedSeasons?.length && res.data.length > 0) {
+          setSeason(res.data[0]);
+        }
+      })
+      .catch(() => {
+        if (!cachedSeasons?.length) {
+          setCaps({
+            orangeCap: { player: "", points: 0 },
+            redCap: { player: "", points: 0 },
+            blueCap: { player: "", wins: 0 },
+            yellowCap: { player: "", avg: 0 },
+            blackCap: { player: "", points: 0 },
+          });
+        }
+      });
   }, []);
 
   useEffect(() => {
     if (!season) return;
 
-    setCaps(null);
-    api.get(`/seasons/${season}/caps`).then((res) => setCaps(res.data));
+    const cacheKey = `${CAPS_CACHE_PREFIX}${season}`;
+    const cachedCaps = readCache(cacheKey);
+
+    if (cachedCaps) {
+      setCaps(cachedCaps);
+    } else {
+      setCaps(null);
+    }
+
+    api.get(`/seasons/${season}/caps`).then((res) => {
+      setCaps(res.data);
+      writeCache(cacheKey, res.data);
+    });
   }, [season]);
 
   if (!caps)

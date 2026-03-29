@@ -3,6 +3,43 @@ import api from "../api/axios";
 import Loader from "../components/Loader";
 import Footer from "../components/Footer";
 
+const CACHE_TTL_MS = 5 * 60 * 1000;
+const SEASONS_CACHE_KEY = "seasons-cache-v1";
+const MATCHES_CACHE_PREFIX = "matches-cache-v1:";
+
+const readCache = (key) => {
+  try {
+    const rawValue = sessionStorage.getItem(key);
+    if (!rawValue) return null;
+
+    const parsed = JSON.parse(rawValue);
+    if (!parsed?.timestamp || !Array.isArray(parsed?.data)) return null;
+
+    if (Date.now() - parsed.timestamp > CACHE_TTL_MS) {
+      sessionStorage.removeItem(key);
+      return null;
+    }
+
+    return parsed.data;
+  } catch {
+    return null;
+  }
+};
+
+const writeCache = (key, data) => {
+  try {
+    sessionStorage.setItem(
+      key,
+      JSON.stringify({
+        timestamp: Date.now(),
+        data,
+      }),
+    );
+  } catch {
+    // Ignore cache write errors.
+  }
+};
+
 function MatchHistory() {
   const currentYear = new Date().getFullYear().toString();
 
@@ -13,19 +50,45 @@ function MatchHistory() {
 
   // Fetch available seasons
   useEffect(() => {
-    api.get("/seasons").then((res) => {
-      setSeasons(res.data);
-    });
+    const cachedSeasons = readCache(SEASONS_CACHE_KEY);
+    if (cachedSeasons?.length) {
+      setSeasons(cachedSeasons);
+    }
+
+    api
+      .get("/seasons")
+      .then((res) => {
+        setSeasons(res.data);
+        writeCache(SEASONS_CACHE_KEY, res.data);
+      })
+      .catch(() => {
+        if (!cachedSeasons?.length) {
+          setLoading(false);
+        }
+      });
   }, []);
 
   // Fetch matches when season changes
   useEffect(() => {
-    setLoading(true);
+    if (!season) return;
 
-    api.get(`/seasons/${season}/matches`).then((res) => {
-      setMatches(res.data);
+    const cacheKey = `${MATCHES_CACHE_PREFIX}${season}`;
+    const cachedMatches = readCache(cacheKey);
+
+    if (cachedMatches) {
+      setMatches(cachedMatches);
       setLoading(false);
-    });
+    } else {
+      setLoading(true);
+    }
+
+    api
+      .get(`/seasons/${season}/matches`)
+      .then((res) => {
+        setMatches(res.data);
+        writeCache(cacheKey, res.data);
+      })
+      .finally(() => setLoading(false));
   }, [season]);
 
   // Skeleton Loader

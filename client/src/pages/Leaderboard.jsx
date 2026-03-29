@@ -3,37 +3,93 @@ import api from "../api/axios";
 import { Link } from "react-router-dom";
 import Loader from "../components/Loader";
 
+const CACHE_TTL_MS = 5 * 60 * 1000;
+const SEASONS_CACHE_KEY = "seasons-cache-v1";
+const LEADERBOARD_CACHE_PREFIX = "leaderboard-cache-v1:";
+
+const readCache = (key) => {
+  try {
+    const rawValue = sessionStorage.getItem(key);
+    if (!rawValue) return null;
+
+    const parsed = JSON.parse(rawValue);
+    if (!parsed?.timestamp || !Array.isArray(parsed?.data)) return null;
+
+    if (Date.now() - parsed.timestamp > CACHE_TTL_MS) {
+      sessionStorage.removeItem(key);
+      return null;
+    }
+
+    return parsed.data;
+  } catch {
+    return null;
+  }
+};
+
+const writeCache = (key, data) => {
+  try {
+    sessionStorage.setItem(
+      key,
+      JSON.stringify({
+        timestamp: Date.now(),
+        data,
+      }),
+    );
+  } catch {
+    // Ignore cache write errors and continue with network data.
+  }
+};
+
 function Leaderboard() {
   const [seasons, setSeasons] = useState([]);
   const [season, setSeason] = useState("");
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [cache, setCache] = useState({});
 
   useEffect(() => {
-    api.get("/seasons").then((res) => {
-      setSeasons(res.data);
-      if (res.data.length > 0) {
-        setSeason(res.data[0]);
-      }
-    });
+    const cachedSeasons = readCache(SEASONS_CACHE_KEY);
+    if (cachedSeasons?.length) {
+      setSeasons(cachedSeasons);
+      setSeason(cachedSeasons[0]);
+    }
+
+    api
+      .get("/seasons")
+      .then((res) => {
+        setSeasons(res.data);
+        writeCache(SEASONS_CACHE_KEY, res.data);
+
+        if (!season && res.data.length > 0) {
+          setSeason(res.data[0]);
+        }
+      })
+      .catch(() => {
+        if (!cachedSeasons?.length) {
+          setLoading(false);
+        }
+      });
   }, []);
 
   useEffect(() => {
     if (!season) return;
 
-    if (cache[season]) {
-      setData(cache[season]);
+    const cacheKey = `${LEADERBOARD_CACHE_PREFIX}${season}`;
+    const cachedLeaderboard = readCache(cacheKey);
+
+    if (cachedLeaderboard) {
+      setData(cachedLeaderboard);
       setLoading(false);
-      return;
+    } else {
+      setLoading(true);
     }
 
-    setLoading(true);
-    api.get(`/seasons/${season}/leaderboard`).then((res) => {
-      setData(res.data);
-      setCache((prev) => ({ ...prev, [season]: res.data }));
-      setLoading(false);
-    });
+    api
+      .get(`/seasons/${season}/leaderboard`)
+      .then((res) => {
+        setData(res.data);
+        writeCache(cacheKey, res.data);
+      })
+      .finally(() => setLoading(false));
   }, [season]);
 
   if (loading) {
