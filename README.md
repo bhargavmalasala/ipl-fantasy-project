@@ -1,6 +1,6 @@
 # Stumpr IPL Tracker
 
-A production-oriented, full-stack cricket analytics platform built to model real league operations: match ingestion, season-wise rankings, player analytics, cap awards, and secure admin controls.
+Stumpr IPL Tracker is a production-oriented full-stack cricket analytics platform designed to mirror real league operations end to end. It supports structured match ingestion by season, automatic leaderboard generation, deep player analytics, head-to-head comparisons, and cap award computation (Orange, Red, Blue, Yellow, Black) from live season data. The system combines a React-based analytics dashboard with an Express and Firebase backend, uses token-based admin authentication for secure match management, and applies caching plus parallelized data aggregation for fast, scalable reads. Built as more than a score viewer, it models how a real sports operations product handles data integrity, role-based access, season context, and analytics delivery in a production-ready workflow.
 
 This README is intentionally written as an engineering showcase for interview review.
 
