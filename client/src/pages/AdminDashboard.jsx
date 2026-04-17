@@ -34,6 +34,16 @@ function AdminDashboard() {
 
   const [matches, setMatches] = useState([]);
 
+  const getNextMatchNumber = (matchesList) => {
+    const maxMatchNumber = matchesList.reduce((max, match) => {
+      const numericMatchNumber = Number(match?.matchNumber);
+      if (Number.isNaN(numericMatchNumber)) return max;
+      return Math.max(max, numericMatchNumber);
+    }, 0);
+
+    return maxMatchNumber + 1;
+  };
+
   const season = new Date().getFullYear();
 
   // Fetch matches when Manage tab opens
@@ -48,7 +58,7 @@ function AdminDashboard() {
       const res = await api.get(`/seasons/${season}/matches`);
 
       setMatches(res.data);
-      setMatchNumber(res.data.length + 1);
+      setMatchNumber(getNextMatchNumber(res.data));
     } catch (error) {
       console.error("Error fetching matches");
     }
@@ -60,7 +70,9 @@ function AdminDashboard() {
     try {
       await api.delete(`/seasons/${season}/matches/${id}`);
 
-      setMatches(matches.filter((m) => m.id !== id));
+      const updatedMatches = matches.filter((m) => m.id !== id);
+      setMatches(updatedMatches);
+      setMatchNumber(getNextMatchNumber(updatedMatches));
     } catch (error) {
       alert("Delete failed");
     }
@@ -121,7 +133,7 @@ function AdminDashboard() {
           rank: "",
         })),
       );
-      setMatchNumber("");
+      setMatchNumber((prev) => Number(prev || 0) + 1);
       setDate("");
     } catch (error) {
       const backendMessage = error?.response?.data?.message;
