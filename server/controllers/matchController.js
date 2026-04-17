@@ -15,6 +15,12 @@ const loadEntriesByMatchId = async (matchDocs) => {
   return new Map(entriesResults);
 };
 
+const sortByLeaderboardRank = (a, b) => {
+  if (b.wins !== a.wins) return b.wins - a.wins;
+  if (b.totalPoints !== a.totalPoints) return b.totalPoints - a.totalPoints;
+  return a.name.localeCompare(b.name);
+};
+
 export const createMatch = async (req, res) => {
   try {
     const { matchNumber, matchName, date, entries } = req.body;
@@ -197,11 +203,8 @@ export const getLeaderboard = async (req, res) => {
       totalPoints: stats.totalPoints,
     }));
 
-    //sort by wins and then points
-    result.sort((a, b) => {
-      if (b.wins !== a.wins) return b.wins - a.wins;
-      return b.totalPoints - a.totalPoints;
-    });
+    // sort by the same rank rules used across analytics/caps
+    result.sort(sortByLeaderboardRank);
 
     return res.json(result);
   } catch (error) {
@@ -474,16 +477,27 @@ export const getSeasonCaps = async (req, res) => {
     let blueCap = { player: "", wins: 0 };
     let yellowCap = { player: "", avg: 0 };
 
+    const leaderboardRows = Object.keys(playerStats)
+      .map((player) => ({
+        name: player,
+        wins: playerStats[player].wins,
+        totalPoints: playerStats[player].totalPoints,
+      }))
+      .sort(sortByLeaderboardRank);
+
+    if (leaderboardRows.length > 0) {
+      blueCap = {
+        player: leaderboardRows[0].name,
+        wins: leaderboardRows[0].wins,
+      };
+    }
+
     Object.keys(playerStats).forEach((player) => {
       const stats = playerStats[player];
       const avg = stats.totalPoints / stats.matches;
 
       if (stats.totalPoints > orangeCap.points) {
         orangeCap = { player, points: stats.totalPoints };
-      }
-
-      if (stats.wins > blueCap.wins) {
-        blueCap = { player, wins: stats.wins };
       }
 
       if (avg > Number(yellowCap.avg)) {
