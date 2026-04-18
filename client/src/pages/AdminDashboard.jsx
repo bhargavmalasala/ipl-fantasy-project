@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 const players = [
   "Abhiram",
   "Bhargav",
-  "Durgesh",
   "Kartheek",
   "Living Stone",
   "Rishiraj",
