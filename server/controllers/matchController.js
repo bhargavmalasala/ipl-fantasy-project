@@ -296,7 +296,20 @@ export const getPlayerProfile = async (req, res) => {
       if (!entry) continue;
 
       totalPoints += entry.points;
-      if (Number(entry.rank) === 1) wins += 1;
+
+      const normalizedPlayerName = String(name).trim().toLowerCase();
+      const normalizedWinnerName = String(matchData.winnerName || "")
+        .trim()
+        .toLowerCase();
+
+      if (normalizedWinnerName) {
+        if (normalizedWinnerName === normalizedPlayerName) {
+          wins += 1;
+        }
+      } else if (Number(entry.rank) === 1) {
+        // Fallback for legacy matches where winnerName is not stored.
+        wins += 1;
+      }
 
       bestScore = Math.max(bestScore, entry.points);
 
