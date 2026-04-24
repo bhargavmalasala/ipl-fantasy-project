@@ -313,8 +313,9 @@ export const getPlayerProfile = async (req, res) => {
     if (worstScore === Infinity) worstScore = 0;
     const matchesPlayed = history.length;
 
+    const totalMatches = matchDocs.length;
     const avgPoints =
-      matchesPlayed > 0 ? Math.round(totalPoints / matchesPlayed) : 0;
+      totalMatches > 0 ? Math.round(totalPoints / totalMatches) : 0;
     return res.json({
       name,
       wins,
@@ -494,7 +495,8 @@ export const getSeasonCaps = async (req, res) => {
 
     Object.keys(playerStats).forEach((player) => {
       const stats = playerStats[player];
-      const avg = stats.totalPoints / stats.matches;
+      const totalMatches = matchDocs.length;
+      const avg = totalMatches > 0 ? stats.totalPoints / totalMatches : 0;
 
       if (stats.totalPoints > orangeCap.points) {
         orangeCap = { player, points: stats.totalPoints };

@@ -92,16 +92,9 @@ function ComparePlayers() {
     }
   });
 
-  let p1Matches = 0;
-  let p2Matches = 0;
-
-  data.forEach((match) => {
-    if (match[player1] > 0) p1Matches++;
-    if (match[player2] > 0) p2Matches++;
-  });
-
-  const p1Avg = p1Matches ? Math.round(p1Total / p1Matches) : 0;
-  const p2Avg = p2Matches ? Math.round(p2Total / p2Matches) : 0;
+  const totalMatches = data.length;
+  const p1Avg = totalMatches ? Math.round(p1Total / totalMatches) : 0;
+  const p2Avg = totalMatches ? Math.round(p2Total / totalMatches) : 0;
 
   if (p1Lowest === Infinity) p1Lowest = 0;
   if (p2Lowest === Infinity) p2Lowest = 0;
