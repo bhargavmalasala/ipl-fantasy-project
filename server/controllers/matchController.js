@@ -296,7 +296,7 @@ export const getPlayerProfile = async (req, res) => {
       if (!entry) continue;
 
       totalPoints += entry.points;
-      if (entry.rank === 1) wins += 1;
+      if (Number(entry.rank) === 1) wins += 1;
 
       bestScore = Math.max(bestScore, entry.points);
 
@@ -307,7 +307,7 @@ export const getPlayerProfile = async (req, res) => {
       history.push({
         matchNumber: matchData.matchNumber,
         points: entry.points,
-        rank: entry.rank,
+        rank: Number(entry.rank) || 0,
       });
     }
     if (worstScore === Infinity) worstScore = 0;
