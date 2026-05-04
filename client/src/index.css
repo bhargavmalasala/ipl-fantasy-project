@@ -1,19 +1,45 @@
-@import url("https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 /* index.css */
 
 @layer base {
   html,
   body {
-    font-family: "Saira", "Inter", sans-serif;
-    background-color: #020617; /* same as your dark theme */
+    font-family: "Chakra Petch", sans-serif;
+    letter-spacing: 0.01em;
+    background-color: #000000;
     min-height: 100%;
   }
 }
 
 .app-bg {
   min-height: 100vh;
-  background: url("/stadium.png") center/cover no-repeat fixed;
+  background: linear-gradient(rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.72)), url("/stadium.png") center/cover no-repeat fixed;
+  /* background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(255, 255, 255, 0.04),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 15% 18%,
+      rgba(255, 255, 255, 0.035),
+      transparent 22%
+    ),
+    radial-gradient(
+      circle at 85% 14%,
+      rgba(255, 255, 255, 0.025),
+      transparent 18%
+    ),
+    repeating-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.018) 0,
+      rgba(255, 255, 255, 0.018) 1px,
+      transparent 1px,
+      transparent 86px
+    ),
+    linear-gradient(180deg, #000000 0%, #050505 45%, #0b0b0b 100%);
+  background-color: #000000; */
 }
 
 @layer components {
@@ -23,7 +49,7 @@
     z-index: 50;
 
     /* background: rgba(10, 25, 49, 0.6); /* semi-transparent */
-    backdrop-filter: blur(6px);
+    backdrop-filter: blur(100px);
 
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
