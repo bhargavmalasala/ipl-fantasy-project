@@ -113,7 +113,11 @@ function ComparePlayers() {
         >
           <option value="">Select Player 1</option>
           {players.map((p) => (
-            <option key={p} value={p} className="text-black">
+            <option
+              key={p}
+              value={p}
+              className="bg-zinc-950 text-white font-sans"
+            >
               {p}
             </option>
           ))}
@@ -128,7 +132,11 @@ function ComparePlayers() {
         >
           <option value="">Select Player 2</option>
           {players.map((p) => (
-            <option key={p} value={p} className="text-black">
+            <option
+              key={p}
+              value={p}
+              className="bg-zinc-950 text-white font-sans"
+            >
               {p}
             </option>
           ))}

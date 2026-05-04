@@ -151,7 +151,11 @@ function Caps() {
           className="bg-white/10 border border-white/20 text-white px-4 py-2 rounded-lg"
         >
           {seasons.map((s) => (
-            <option key={s} value={s} className="text-black">
+            <option
+              key={s}
+              value={s}
+              className="bg-zinc-950 text-white font-sans"
+            >
               {s}
             </option>
           ))}
