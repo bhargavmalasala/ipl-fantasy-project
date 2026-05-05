@@ -138,106 +138,103 @@ function Caps() {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto px-4 mt-10 sm:mt-16 text-white">
-      {/* Heading */}
-      <h2 className="text-2xl sm:text-4xl font-extrabold text-center mb-8 sm:mb-12">
-        Season {season} Caps 🏆
-      </h2>
-
-      <div className="flex justify-center mb-8">
-        <select
-          value={season}
-          onChange={(e) => setSeason(e.target.value)}
-          className="bg-white/10 border border-white/20 text-white px-4 py-2 rounded-lg"
-        >
-          {seasons.map((s) => (
-            <option
-              key={s}
-              value={s}
-              className="bg-zinc-950 text-white font-sans"
-            >
-              {s}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-8">
-        {capData.map((cap, index) => (
-          <div
-            key={index}
-            className="
-    bg-white/10 backdrop-blur-lg 
-    border border-white/20 
-    rounded-2xl 
-    p-6 
-    text-center 
-    shadow-lg
-    hover:scale-105 
-    hover:shadow-2xl 
-    transition-all duration-300
-  "
-          >
-            {/* Cap Image */}
-            <img
-              src={cap.img}
-              alt={cap.title}
-              className="w-28 h-28 object-contain mx-auto mb-4 transition-transform duration-300 hover:scale-110"
-            />
-
-            {/* PLAYER NAME (PRIMARY) */}
-            <h2 className="text-2xl font-bold tracking-wide">{cap.player}</h2>
-
-            {/* STAT (IMPORTANT) */}
-            <p className="text-lg text-yellow-300 font-semibold mt-1">
-              {cap.value} {cap.unit}
-            </p>
-
-            {/* CAP TITLE (SECONDARY) */}
-            <p className="text-gray-400 text-sm mt-2 uppercase tracking-wider">
-              {cap.title}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      {/* Cap Meaning Section */}
-      <div className="max-w-5xl mx-auto mt-16 bg-[#1f2a3a] rounded-xl border border-white/10 overflow-hidden">
-        {/* Header */}
-        <div className="bg-orange-500 px-6 py-3 font-semibold text-white text-lg">
-          What Each Cap Represents
+    <div className="max-w-6xl mx-auto px-4 mt-12 sm:mt-16 text-white">
+      <div className="bg-black/70 backdrop-blur-3xl border border-white/5 rounded-3xl shadow-2xl p-5 sm:p-8">
+        {/* Heading */}
+        <div className="text-center mb-8 sm:mb-12">
+          <h2 className="text-2xl sm:text-4xl font-black tracking-tighter italic text-white">
+            Season {season} Caps 🏆
+          </h2>
+          <p className="mt-2 text-zinc-500 text-[10px] sm:text-xs uppercase tracking-[0.35em] font-bold">
+            Cap leaders and season awards
+          </p>
         </div>
 
-        {/* Content */}
-        <div className="divide-y divide-white/10">
-          <div className="flex justify-between px-6 py-4">
-            <span className="text-orange-400 font-medium">Orange Cap</span>
-            <span className="text-gray-300">
-              Highest Total Points in the Season
-            </span>
+        <div className="flex justify-center mb-8">
+          <select
+            value={season}
+            onChange={(e) => setSeason(e.target.value)}
+            className="appearance-none bg-zinc-900/50 hover:bg-zinc-800/60 border border-white/10 text-white px-4 py-2 rounded-xl outline-none cursor-pointer backdrop-blur-xl transition-all font-bold text-sm tracking-tighter"
+          >
+            {seasons.map((s) => (
+              <option
+                key={s}
+                value={s}
+                className="bg-zinc-950 text-white font-sans"
+              >
+                {s}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-8">
+          {capData.map((cap, index) => (
+            <div
+              key={index}
+              className="group bg-white/5 border border-white/5 backdrop-blur-xl rounded-3xl p-6 text-center shadow-lg hover:-translate-y-1 hover:bg-white/8 hover:border-cyan-400/20 hover:shadow-[0_20px_60px_rgba(0,0,0,0.35)] transition-all duration-300"
+            >
+              <div className="inline-flex items-center justify-center rounded-full bg-cyan-400/10 border border-cyan-300/20 p-3 mb-5">
+                <img
+                  src={cap.img}
+                  alt={cap.title}
+                  className="w-24 h-24 sm:w-28 sm:h-28 object-contain transition-transform duration-300 group-hover:scale-110"
+                />
+              </div>
+
+              <h2 className="text-2xl font-black tracking-tighter text-white">
+                {cap.player}
+              </h2>
+
+              <p className="text-lg text-cyan-300 font-bold mt-2">
+                {cap.value} {cap.unit}
+              </p>
+
+              <p className="text-zinc-400 text-xs mt-3 uppercase tracking-[0.3em] font-bold">
+                {cap.title}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* Cap Meaning Section */}
+        <div className="max-w-5xl mx-auto mt-16 bg-white/5 rounded-3xl border border-white/5 overflow-hidden backdrop-blur-xl">
+          {/* Header */}
+          <div className="bg-cyan-500/90 px-6 py-3 font-black text-black text-lg tracking-tight">
+            What Each Cap Represents
           </div>
 
-          <div className="flex justify-between px-6 py-4">
-            <span className="text-red-400 font-medium">Red Cap</span>
-            <span className="text-gray-300">Single Match Highest Points</span>
-          </div>
+          {/* Content */}
+          <div className="divide-y divide-white/5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-6 py-4">
+              <span className="text-cyan-300 font-bold">Orange Cap</span>
+              <span className="text-zinc-300">
+                Highest Total Points in the Season
+              </span>
+            </div>
 
-          <div className="flex justify-between px-6 py-4">
-            <span className="text-gray-400 font-medium">Black Cap</span>
-            <span className="text-gray-300">Single Match Lowest Points</span>
-          </div>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-6 py-4">
+              <span className="text-rose-300 font-bold">Red Cap</span>
+              <span className="text-zinc-300">Single Match Highest Points</span>
+            </div>
 
-          <div className="flex justify-between px-6 py-4">
-            <span className="text-blue-400 font-medium">Blue Cap</span>
-            <span className="text-gray-300">Most Wins</span>
-          </div>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-6 py-4">
+              <span className="text-zinc-300 font-bold">Black Cap</span>
+              <span className="text-zinc-300">Single Match Lowest Points</span>
+            </div>
 
-          <div className="flex justify-between px-6 py-4">
-            <span className="text-yellow-400 font-medium">Yellow Cap</span>
-            <span className="text-gray-300">
-              Highest average points per match
-            </span>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-6 py-4">
+              <span className="text-sky-300 font-bold">Blue Cap</span>
+              <span className="text-zinc-300">Most Wins</span>
+            </div>
+
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-6 py-4">
+              <span className="text-yellow-300 font-bold">Yellow Cap</span>
+              <span className="text-zinc-300">
+                Highest average points per match
+              </span>
+            </div>
           </div>
         </div>
       </div>

@@ -92,6 +92,7 @@ function MatchHistory() {
   }, [season]);
 
   // Skeleton Loader
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[70vh]">

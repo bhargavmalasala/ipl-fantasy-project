@@ -96,8 +96,13 @@ const Wrapper = styled.div`
   }
 
   @keyframes blink {
-    0%, 100% { opacity: 0; }
-    50% { opacity: 1; }
+    0%,
+    100% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
   }
 
   @keyframes pulse {
