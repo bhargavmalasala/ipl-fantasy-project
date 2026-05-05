@@ -37,122 +37,162 @@ function PlayerProfile() {
     );
   }
 
-  const sortedHistory = [...player.history].sort((a, b) => a.match - b.match);
+  const sortedHistory = [...player.history].sort(
+    (a, b) => a.matchNumber - b.matchNumber,
+  );
   console.log(player.history);
-
   return (
-    <div className="max-w-5xl mx-auto mt-10 bg-[#0f172a] p-8 rounded-2xl shadow-2xl border border-white/10 text-white">
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h2 className="text-3xl font-bold text-orange-400">{player.name}</h2>
-          <p className="text-gray-400">Season {season}</p>
-        </div>
+    <div className="max-w-5xl mx-auto mt-12 relative px-4">
+      <div className="bg-black/70 backdrop-blur-3xl rounded-3xl border border-white/5 p-6 sm:p-10 shadow-2xl text-white">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-black tracking-tighter italic text-white">
+              {player.name}
+            </h2>
+            <p className="text-zinc-500 text-[10px] font-bold tracking-widest uppercase opacity-80">
+              Season {season}
+            </p>
+          </div>
 
-        {/* Optional Badge */}
-        <div className="text-sm bg-orange-500/20 text-orange-400 px-4 py-2 rounded-lg">
-          Player Stats
-        </div>
-      </div>
-
-      {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-        <div className="bg-[#1e293b] border border-white/10 p-4 rounded">
-          Matches Played
-          <div className="font-bold text-lg">{player.matchesPlayed}</div>
-        </div>
-
-        <div className="bg-[#1e293b] border border-white/10 p-4 rounded">
-          Wins
-          <div className="font-bold text-lg">{player.wins}</div>
-        </div>
-
-        <div className="bg-[#1e293b] border border-white/10 p-4 rounded">
-          Total Points
-          <div className="font-bold text-xl text-orange-400">
-            {player.totalPoints}
+          <div className="mt-3 sm:mt-0 text-xs bg-cyan-500/10 text-cyan-300 px-4 py-2 rounded-xl font-bold">
+            Player Stats
           </div>
         </div>
 
-        <div className="bg-[#1e293b] border border-white/10 p-4 rounded">
-          Avg Points
-          <div className="font-bold text-lg">{player.avgPoints}</div>
+        {/* Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+          <div className="bg-white/5 border border-white/5 rounded-2xl p-4 text-center">
+            <div className="text-xs text-zinc-300 uppercase tracking-wider">
+              Matches Played
+            </div>
+            <div className="font-black text-lg text-white mt-2">
+              {player.matchesPlayed}
+            </div>
+          </div>
+
+          <div className="bg-white/5 border border-white/5 rounded-2xl p-4 text-center">
+            <div className="text-xs text-zinc-300 uppercase tracking-wider">
+              Wins
+            </div>
+            <div className="font-black text-lg text-white mt-2">
+              {player.wins}
+            </div>
+          </div>
+
+          <div className="bg-white/5 border border-white/5 rounded-2xl p-4 text-center">
+            <div className="text-xs text-zinc-300 uppercase tracking-wider">
+              Total Points
+            </div>
+            <div className="font-black text-xl text-cyan-300 mt-2">
+              {player.totalPoints}
+            </div>
+          </div>
+
+          <div className="bg-white/5 border border-white/5 rounded-2xl p-4 text-center">
+            <div className="text-xs text-zinc-300 uppercase tracking-wider">
+              Avg Points
+            </div>
+            <div className="font-black text-lg text-white mt-2">
+              {player.avgPoints}
+            </div>
+          </div>
+
+          <div className="bg-white/5 border border-white/5 rounded-2xl p-4 text-center">
+            <div className="text-xs text-zinc-300 uppercase tracking-wider">
+              Best Score
+            </div>
+            <div className="font-black text-lg text-white mt-2">
+              {player.bestScore}
+            </div>
+          </div>
+
+          <div className="bg-white/5 border border-white/5 rounded-2xl p-4 text-center">
+            <div className="text-xs text-zinc-300 uppercase tracking-wider">
+              Worst Score
+            </div>
+            <div className="font-black text-lg text-white mt-2">
+              {player.worstScore}
+            </div>
+          </div>
         </div>
 
-        <div className="bg-[#1e293b] border border-white/10 p-4 rounded">
-          Best Score
-          <div className="font-bold text-lg">{player.bestScore}</div>
+        <div className="mt-6">
+          <h3 className="text-lg sm:text-xl font-semibold mb-4 text-white">
+            Performance Graph
+          </h3>
+          <div className="mt-4 rounded-2xl border border-white/5 bg-white/5 p-4 backdrop-blur-xl">
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={sortedHistory}>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="rgba(255,255,255,0.06)"
+                />
+
+                <XAxis
+                  dataKey="matchNumber"
+                  stroke="#a1a1aa"
+                  tick={{ fill: "#d4d4d8" }}
+                />
+
+                <YAxis stroke="#a1a1aa" tick={{ fill: "#d4d4d8" }} />
+
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "rgba(9,9,11,0.95)",
+                    borderRadius: 12,
+                    border: "1px solid rgba(255,255,255,0.06)",
+                  }}
+                />
+
+                <Line
+                  type="monotone"
+                  dataKey="points"
+                  stroke="#22d3ee"
+                  strokeWidth={3}
+                  dot={{ r: 4 }}
+                  activeDot={{ r: 7 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
-        <div className="bg-[#1e293b] border border-white/10 p-4 rounded">
-          Worst Score
-          <div className="font-bold text-lg">{player.worstScore}</div>
+        {/* Match History */}
+        <div className="w-full overflow-x-auto mt-8">
+          <table className="w-full border-separate border-spacing-y-2">
+            <thead>
+              <tr className="text-cyan-300 uppercase tracking-[0.2em] text-[9px] font-black opacity-70">
+                <th className="text-left pb-2 px-6">Match</th>
+                <th className="text-left pb-2 px-6">Points</th>
+                <th className="text-left pb-2 px-6">Rank</th>
+              </tr>
+            </thead>
+
+            <tbody className="mt-2">
+              {player.history.map((h, index) => (
+                <tr
+                  key={h.matchNumber}
+                  className="group transition-all duration-300"
+                >
+                  <td className="py-3.5 px-6 bg-white/2 group-hover:bg-white/5 transition-colors">
+                    Match {h.matchNumber}
+                  </td>
+
+                  <td className="py-3.5 px-6 bg-white/2 group-hover:bg-white/5 transition-colors text-zinc-200">
+                    {h.points}
+                  </td>
+
+                  <td
+                    className={`py-3.5 px-6 text-sm font-black rounded-r-xl bg-white/2 group-hover:bg-white/5 transition-colors ${h.rank === 1 ? "text-cyan-300" : "text-zinc-400"}`}
+                  >
+                    {h.rank === 1 ? "🏆 1" : h.rank}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
-
-      <div className="mt-10">
-        <h3 className="text-xl font-semibold mb-4">Performance Graph</h3>
-        <div className="mt-10 bg-[#1e293b] p-6 rounded-xl border border-white/10">
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={sortedHistory}>
-              <CartesianGrid strokeDasharray="3 3" />
-
-              <XAxis
-                dataKey="matchNumber"
-                label={{ value: "Match", position: "insideBottom", offset: -5 }}
-              />
-
-              <YAxis
-                label={{ value: "Points", angle: -90, position: "insideLeft" }}
-              />
-
-              <Tooltip />
-
-              <Line
-                type="monotone"
-                dataKey="points"
-                stroke="#f97316"
-                strokeWidth={3}
-                dot={{ r: 4 }}
-                activeDot={{ r: 7 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* Match History */}
-      <table className="w-full text-sm mt-10 overflow-hidden rounded-xl">
-        <thead>
-          <tr className="bg-orange-500 text-white">
-            <th className="text-left py-3 px-4">Match</th>
-            <th className="text-left py-3 px-4">Points</th>
-            <th className="text-left py-3 px-4">Rank</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {player.history.map((h, index) => (
-            <tr
-              key={h.match}
-              className={`border-b ${
-                index % 2 === 0 ? "bg-[#1e293b]" : "bg-[#0f172a]"
-              } hover:bg-orange-50/10`}
-            >
-              <td className="py-3 px-4">Match {h.matchNumber}</td>
-
-              <td className="py-3 px-4">{h.points}</td>
-
-              <td
-                className={`py-3 px-4 ${
-                  h.rank === 1 ? "text-yellow-400 font-bold" : ""
-                }`}
-              >
-                {h.rank === 1 ? "🏆 1" : h.rank}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
     </div>
   );
 }
