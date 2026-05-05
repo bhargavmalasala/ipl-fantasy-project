@@ -198,7 +198,7 @@ function MatchHistory() {
                             <td className="py-3.5 px-6 bg-white/2 group-hover:bg-white/5 transition-colors">
                               <div className="flex items-center gap-2">
                                 <span
-                                  className={`${winnerName === entry.name ? "text-cyan-300 font-bold" : "text-zinc-200"}`}
+                                  className={`${winnerName === entry.name ? "text-cyan-300 font-bold text-sm tracking-tight" : "text-zinc-200 text-sm tracking-tight font-bold"}`}
                                 >
                                   {entry.name}
                                 </span>
