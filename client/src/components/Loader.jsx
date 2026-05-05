@@ -1,124 +1,111 @@
 import React from "react";
-import styled from "styled-components";
 
 const Loader = () => {
   return (
-    <Wrapper>
-      <div className="loader">
-        {/* VS Icon */}
-        <div className="vs">⚔️</div>
+    <div className="fixed top-16 left-0 right-0 bottom-0 bg-black flex items-center justify-center z-40">
+      <div className="relative w-64 h-40 flex items-center justify-center">
+        {/* Pitch line */}
+        <div className="absolute bottom-10 w-full h-0.5 bg-cyan-500/20" />
+
+        {/* Ball */}
+        <div className="absolute w-4 h-4 bg-cyan-300 rounded-full shadow-[0_0_12px_#22d3ee] animate-ball">
+  
+  {/* Highlight (ADD HERE) */}
+  <div className="absolute top-0.5 left-0.5 w-1 h-1 bg-white/40 rounded-full blur-[1px]" />
+
+  {/* Seam */}
+  <div className="absolute inset-0 flex items-center justify-center animate-spinFast">
+    <div className="w-0.5 h-4 bg-cyan-100 rounded-full" />
+  </div>
+
+</div>
+
+        {/* Impact ripple */}
+        <div className="absolute bottom-10 w-6 h-6 border border-cyan-400/40 rounded-full animate-ripple" />
 
         {/* Text */}
-        <div className="text">
-          Loading<span>.</span>
-          <span>.</span>
-          <span>.</span>
-        </div>
-
-        {/* Bar */}
-        <div className="bar">
-          <div className="fill" />
-        </div>
+        <p className="absolute bottom-0 text-cyan-300 text-xs tracking-widest animate-fade">
+          LOADING ...
+        </p>
       </div>
-    </Wrapper>
+
+      <style>{`
+        @keyframes ball {
+  /* Fast incoming */
+  0% {
+    transform: translateX(-120px) translateY(-20px);
+  }
+
+  /* Still fast */
+  40% {
+    transform: translateX(-20px) translateY(0px);
+  }
+
+  /* Impact (bounce point) */
+  50% {
+    transform: translateX(0px) translateY(2px) scale(0.8, 1.2);
+  }
+
+  /* Post-bounce (slower + lower height) */
+  65% {
+    transform: translateX(40px) translateY(-8px) scale(1);
+  }
+
+  /* Flatten path (no second bounce) */
+  85% {
+    transform: translateX(80px) translateY(-4px);
+  }
+
+  100% {
+    transform: translateX(120px) translateY(-4px);
+  }
+}
+        @keyframes spinFast {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+
+        @keyframes ripple {
+          0%, 45% {
+            opacity: 0;
+            transform: scale(0.5);
+          }
+
+          /* Trigger exactly at bounce */
+          50% {
+            opacity: 0.7;
+            transform: scale(0.8);
+          }
+
+          100% {
+            opacity: 0;
+            transform: scale(2.5);
+          }
+        }
+
+        @keyframes fade {
+          0%,100% { opacity: 0.3; }
+          50% { opacity: 1; }
+        }
+
+        .animate-ball {
+          animation: ball 1.8s cubic-bezier(0.25, 0.8, 0.25, 1) infinite;
+        }
+
+        .animate-spinFast {
+          animation: spinFast 0.4s linear infinite;
+        }
+
+        .animate-ripple {
+          animation: ripple 2s ease-out infinite;
+        }
+
+        .animate-fade {
+          animation: fade 2s ease-in-out infinite;
+        }
+      `}</style>
+    </div>
   );
 };
-
-const Wrapper = styled.div`
-  .loader {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 18px;
-    background: rgba(30, 41, 59, 0.8);
-    width: 280px;
-    padding: 24px;
-    border-radius: 12px;
-    /* backdrop-filter: blur(10px) rgba(30, 41, 59, 0.8); */
-  }
-
-  /* ⚔️ Icon */
-  .vs {
-    font-size: 36px;
-    animation: pulse 1.5s infinite ease-in-out;
-    color: #f97316;
-    text-shadow: 0 0 12px rgba(249, 115, 22, 0.8);
-  }
-
-  /* Text */
-  .text {
-    color: white;
-    font-size: 16px;
-    font-weight: 600;
-  }
-
-  .text span {
-    animation: blink 1.4s infinite;
-  }
-
-  .text span:nth-child(2) {
-    animation-delay: 0.2s;
-  }
-
-  .text span:nth-child(3) {
-    animation-delay: 0.4s;
-  }
-
-  /* Bar */
-  .bar {
-    width: 220px;
-    height: 8px;
-    background: #1e293b;
-    border-radius: 999px;
-    overflow: hidden;
-    position: relative;
-  }
-
-  .fill {
-    height: 100%;
-    width: 100%;
-    background: linear-gradient(90deg, #f97316, #fb923c);
-    border-radius: 999px;
-    transform-origin: left center;
-    animation: loading 3s linear infinite;
-    box-shadow: 0 0 12px rgba(249, 115, 22, 0.7);
-  }
-
-  /* Animations */
-
-  @keyframes loading {
-    0% {
-      transform: scaleX(0);
-    }
-    100% {
-      transform: scaleX(1);
-    }
-  }
-
-  @keyframes blink {
-    0%,
-    100% {
-      opacity: 0;
-    }
-    50% {
-      opacity: 1;
-    }
-  }
-
-  @keyframes pulse {
-    0% {
-      transform: scale(1);
-      opacity: 0.7;
-    }
-    50% {
-      transform: scale(1.2);
-      opacity: 1;
-    }
-    100% {
-      transform: scale(1);
-      opacity: 0.7;
-    }
-  }
-`;
 
 export default Loader;
