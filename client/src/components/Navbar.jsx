@@ -30,7 +30,7 @@ function Navbar() {
                 key={item.to}
                 to={item.to}
                 className={({ isActive }) =>
-                  `px-4 py-2 rounded-xl text-sm font-black tracking-tighter transition-all duration-200 ${
+                  `px-4 py-2 rounded-sm text-sm font-black tracking-tighter transition-all duration-200 ${
                     isActive
                       ? "text-cyan-300 bg-cyan-500/10 border border-cyan-300/30"
                       : "text-zinc-300 hover:text-white hover:bg-white/5 border border-transparent"
